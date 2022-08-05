@@ -1,11 +1,11 @@
 #pragma once
 #include <JuceHeader.h>
 
-class DeQuantizer
+class Quantizer
 {
 public:
-  DeQuantizer() {}
-  ~DeQuantizer() {}
+  Quantizer() {}
+  ~Quantizer() {}
 
   void prepareToPlay(double sampleRate, int maxNumSamples)
   {
@@ -19,20 +19,24 @@ public:
 
   void processBlock(AudioBuffer<float>& buffer)
   {
-    int qLevels = powf(2, bitDepth - 1);
-    int smp;
 
+    int qLevels = powf(2, bitDepth - 1);
+    
     for (int smp = 0; smp <= buffer.getNumSamples(); smp++ )
     {
-      for (int ch = buffer.getNumChannels(); --ch >= 0; )
-        {
-          float *val = buffer.getWritePointer(ch);
-          val[smp] = round(val[smp] * qLevels) / qLevels;
-        } 
-    }
       
-
-  }
+      for (int ch = buffer.getNumChannels(); --ch >= 0; )
+      {
+        
+        float *val = buffer.getWritePointer(ch);
+        
+        if (val[smp] >= 0)
+          val[smp] = ceil(val[smp] * qLevels) / qLevels;
+        else
+          val[smp] = floor(val[smp] * qLevels) / qLevels;
+      }
+    }
+  };
 
   void setBitDepth(int newValue)
   {
@@ -43,14 +47,14 @@ private:
 
   int bitDepth;
 
-  JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(DeQuantizer);
+  JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(Quantizer);
 };
 
-class DownSampler
+class Sampler
 {
 public:
-  DownSampler() {}
-  ~DownSampler() {}
+  Sampler() {}
+  ~Sampler() {}
 
   void prepareToPlay(double sampleRate, int maxNumSamples)
   {
@@ -64,7 +68,18 @@ public:
 
   void processBlock(AudioBuffer<float>& buffer)
   {
+    unsigned int t;
 
+    for (int smp = 0; smp <= buffer.getNumSamples(); smp++ )
+    {
+      for (int ch = buffer.getNumChannels(); --ch >= 0; )
+      {
+        float *val = buffer.getWritePointer(ch);
+        
+        if ( ++t%numSamples != 0 || numSamples == 1)
+          val[smp] = val[smp - 1];
+      }
+    }
   }
 
   void setNumSamples(float newValue)
@@ -76,5 +91,5 @@ private:
 
   int numSamples;
 
-  JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(DownSampler);
+  JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(Sampler);
 };

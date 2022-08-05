@@ -48,9 +48,9 @@ private:
 
     DryWet drywetter;
 
-    DeQuantizer dequantizer;
+    Quantizer quantizer;
 
-    DownSampler downsampler;
+    Sampler sampler;
 
     //==============================================================================
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (MyBitCrushAudioProcessor)

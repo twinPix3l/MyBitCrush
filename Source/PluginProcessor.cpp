@@ -6,7 +6,7 @@
 #define NAME_BD "bd"
 #define DEFAULT_BD 32
 
-#define NAME_NS "ds"
+#define NAME_NS "ns"
 #define DEFAULT_NS 512
 
 using namespace juce;
@@ -45,9 +45,9 @@ void MyBitCrushAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer, j
 
     drywetter.setDry(buffer);
 
-    dequantizer.processBlock(buffer);
+    quantizer.processBlock(buffer);
 
-    // downSampler.processBlock(buffer);
+    sampler.processBlock(buffer);
 
     drywetter.merge(buffer);
 }
@@ -80,10 +80,10 @@ void MyBitCrushAudioProcessor::parameterChanged(const String& paramID, float new
         drywetter.setDryWetRatio(newValue);
 
     if (paramID == NAME_BD)
-        dequantizer.setBitDepth(newValue);
+        quantizer.setBitDepth(newValue);
 
     if (paramID == NAME_NS)
-        downsampler.setNumSamples(newValue);
+        sampler.setNumSamples(newValue);
 }
 
 //==============================================================================
