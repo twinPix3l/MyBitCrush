@@ -2,6 +2,7 @@
 
 #include <JuceHeader.h>
 #include "DryWet.h"
+#include "BitCrusher.h"
 
 class MyBitCrushAudioProcessor  : public juce::AudioProcessor, public AudioProcessorValueTreeState::Listener
 {
@@ -46,7 +47,9 @@ private:
     AudioProcessorValueTreeState parameters;
 
     DryWet drywetter;
-    
+
+    DeQuantizer dequantizer;
+
     //==============================================================================
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (MyBitCrushAudioProcessor)
 };
