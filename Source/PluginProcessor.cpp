@@ -3,8 +3,11 @@
 #define NAME_DW "dw"
 #define DEFAULT_DW 0.5f
 
-#define NAME_NB "nb"
-#define DEFAULT_NB "32"
+#define NAME_BD "bd"
+#define DEFAULT_BD 32
+
+#define NAME_NS "ds"
+#define DEFAULT_NS 512
 
 using namespace juce;
 
@@ -12,10 +15,13 @@ using namespace juce;
 MyBitCrushAudioProcessor::MyBitCrushAudioProcessor()
     : parameters(*this, nullptr, "MyBitCrushParameters", {
         std::make_unique<AudioParameterFloat>(NAME_DW, "Dry/Wet", 0.0f, 1.0f, DEFAULT_DW),
-        std::make_unique<AudioParameterInt>(NAME_NB, "N Bits", 1, 32, DEFAULT_DW)
+        std::make_unique<AudioParameterInt>(NAME_BD, "Bit Depth", 1, 32, DEFAULT_BD),
+        std::make_unique<AudioParameterInt>(NAME_NS, "N Samples", 1, 512, DEFAULT_NS)
     })
 {
     parameters.addParameterListener(NAME_DW, this);
+    parameters.addParameterListener(NAME_BD, this);
+    parameters.addParameterListener(NAME_NS, this);
 }
 
 MyBitCrushAudioProcessor::~MyBitCrushAudioProcessor()
@@ -39,7 +45,7 @@ void MyBitCrushAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer, j
 
     drywetter.setDry(buffer);
 
-    // deQuantizer.processBlock(buffer);
+    dequantizer.processBlock(buffer);
 
     // downSampler.processBlock(buffer);
 
@@ -72,8 +78,12 @@ void MyBitCrushAudioProcessor::parameterChanged(const String& paramID, float new
 {
     if (paramID == NAME_DW)
         drywetter.setDryWetRatio(newValue);
-    if (paramID == NAME_NB)
-        dequantizer.setNumBits(newValue);
+
+    if (paramID == NAME_BD)
+        dequantizer.setBitDepth(newValue);
+
+    if (paramID == NAME_NS)
+        downsampler.setNumSamples(newValue);
 }
 
 //==============================================================================

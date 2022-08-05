@@ -9,7 +9,7 @@ public:
 
   void prepareToPlay(double sampleRate, int maxNumSamples)
   {
-    setNumBits(numBits);
+    setBitDepth(bitDepth);
   }
 
   void releaseResources()
@@ -19,17 +19,29 @@ public:
 
   void processBlock(AudioBuffer<float>& buffer)
   {
+    int qLevels = powf(2, bitDepth - 1);
+    int smp;
+
+    for (int smp = 0; smp <= buffer.getNumSamples(); smp++ )
+    {
+      for (int ch = buffer.getNumChannels(); --ch >= 0; )
+        {
+          float *val = buffer.getWritePointer(ch);
+          val[smp] = round(val[smp] * qLevels) / qLevels;
+        } 
+    }
+      
 
   }
 
-  void setNumBits(int newValue)
+  void setBitDepth(int newValue)
   {
-    numBits = newValue;
+    bitDepth = newValue;
   }
 
 private:
 
-  int numBits;
+  int bitDepth;
 
   JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(DeQuantizer);
 };
@@ -42,7 +54,7 @@ public:
 
   void prepareToPlay(double sampleRate, int maxNumSamples)
   {
-
+    setNumSamples(numSamples);
   }
 
   void releaseResources()
@@ -62,7 +74,7 @@ public:
 
 private:
 
-  float numSamples;
+  int numSamples;
 
   JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(DownSampler);
 };
