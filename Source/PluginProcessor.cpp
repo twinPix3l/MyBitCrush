@@ -32,11 +32,15 @@ MyBitCrushAudioProcessor::~MyBitCrushAudioProcessor()
 void MyBitCrushAudioProcessor::prepareToPlay (double sampleRate, int samplesPerBlock)
 {
     drywetter.prepareToPlay(sampleRate, samplesPerBlock);
+    quantizer.prepareToPlay(sampleRate, samplesPerBlock);
+    sampler.prepareToPlay(sampleRate, samplesPerBlock);
 }
 
 void MyBitCrushAudioProcessor::releaseResources()
 {
     drywetter.releaseResources();
+    quantizer.releaseResources();
+    sampler.releaseResources();
 }
 
 void MyBitCrushAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer, juce::MidiBuffer& midiMessages)

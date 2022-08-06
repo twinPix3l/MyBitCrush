@@ -67,12 +67,11 @@ public:
   {
     for (int ch = buffer.getNumChannels(); --ch >= 0; ) 
     {
-      float *val = buffer.getWritePointer(ch);
       for (unsigned int smp = 0; ++smp <= buffer.getNumSamples(); )
       {
         // float step = buffer.getNumSamples() - numSamples;
-
-        if ( numSamples%smp != 0 && smp != 0 )
+        float *val = buffer.getWritePointer(ch);
+        if ( smp%numSamples != 0 )
         {
           val[smp] = val[smp - 1];
         }
