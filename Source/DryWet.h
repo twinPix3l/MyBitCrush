@@ -35,10 +35,11 @@ public:
     //buffer.applyGain(wetLevel);
     //drySignal.applyGain(dryLevel); // sostituito dall'ultimo input del metodo addFrom
     auto numSamples = buffer.getNumSamples();
-    wetLevel.applyGain(buffer, numSamples);
     dryLevel.applyGain(drySignal, numSamples);
-
-    for (int ch = buffer.getNumChannels(); --ch >= 0; ) {
+    wetLevel.applyGain(buffer, numSamples);
+    
+    for (int ch = buffer.getNumChannels(); --ch >= 0; ) 
+    {
       //buffer.addFrom(ch, 0, drySignal, ch, 0, buffer.getNumSamples(), dryLevel);
       buffer.addFrom(ch, 0, drySignal, ch, 0, numSamples); 
     }

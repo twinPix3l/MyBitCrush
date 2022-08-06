@@ -19,18 +19,15 @@ public:
 
   void processBlock(AudioBuffer<float>& buffer)
   {
-
-    int qLevels = powf(2, bitDepth - 1);
-    
-    for (int smp = 0; smp <= buffer.getNumSamples(); smp++ )
+    for (int ch = buffer.getNumChannels(); --ch >= 0; )
     {
+      float *val = buffer.getWritePointer(ch);
       
-      for (int ch = buffer.getNumChannels(); --ch >= 0; )
+      for (int smp = 0; ++smp <= buffer.getNumSamples(); )
       {
-        
-        float *val = buffer.getWritePointer(ch);
-        
-        if (val[smp] >= 0)
+        int qLevels = powf(2, bitDepth - 1);
+
+        if ( val[smp] >= 0)
           val[smp] = ceil(val[smp] * qLevels) / qLevels;
         else
           val[smp] = floor(val[smp] * qLevels) / qLevels;
@@ -68,21 +65,22 @@ public:
 
   void processBlock(AudioBuffer<float>& buffer)
   {
-    unsigned int t;
-
-    for (int smp = 0; smp <= buffer.getNumSamples(); smp++ )
+    for (int ch = buffer.getNumChannels(); --ch >= 0; ) 
     {
-      for (int ch = buffer.getNumChannels(); --ch >= 0; )
+      float *val = buffer.getWritePointer(ch);
+      for (unsigned int smp = 0; ++smp <= buffer.getNumSamples(); )
       {
-        float *val = buffer.getWritePointer(ch);
-        
-        if ( ++t%numSamples != 0 || numSamples == 1)
+        // float step = buffer.getNumSamples() - numSamples;
+
+        if ( numSamples%smp != 0 && smp != 0 )
+        {
           val[smp] = val[smp - 1];
+        }
       }
     }
   }
 
-  void setNumSamples(float newValue)
+  void setNumSamples(int newValue)
   {
     numSamples = newValue;
   }
