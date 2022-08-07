@@ -23,7 +23,7 @@ public:
     {
       float *val = buffer.getWritePointer(ch);
       
-      for (int smp = 0; ++smp <= buffer.getNumSamples(); )
+      for (int smp = 0; smp <= buffer.getNumSamples(); smp++ )
       {
         int qLevels = powf(2, bitDepth - 1);
 
@@ -67,13 +67,13 @@ public:
   {
     for (int ch = buffer.getNumChannels(); --ch >= 0; ) 
     {
-      for (unsigned int smp = 0; ++smp <= buffer.getNumSamples(); )
+      for (unsigned int smp = 0; smp <= buffer.getNumSamples(); smp++ )
       {
-        // float step = buffer.getNumSamples() - numSamples;
         float *val = buffer.getWritePointer(ch);
-        if ( smp%numSamples != 0 )
+        if (numSamples != buffer.getNumSamples())
         {
-          val[smp] = val[smp - 1];
+          if ( smp%(buffer.getNumSamples() - numSamples) != 0 ) 
+            val[smp] = val[smp - 1];
         }
       }
     }
