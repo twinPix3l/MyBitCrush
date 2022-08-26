@@ -49,9 +49,9 @@ public:
   {
     dryWetRatio = newValue;
     //dryLevel = sqrt(1 - dryWetRatio);
-    dryLevel.setTargetValue(sqrt(1 - dryWetRatio));
+    dryLevel.setTargetValue((1 - dryWetRatio));
     //wetLevel = sqrt(dryWetRatio);
-    wetLevel.setTargetValue(sqrt(dryWetRatio));
+    wetLevel.setTargetValue((dryWetRatio));
   }
 
 private:

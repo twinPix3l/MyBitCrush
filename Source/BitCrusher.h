@@ -55,7 +55,9 @@ public:
 
   void prepareToPlay(double sampleRate, int maxNumSamples)
   {
-    setNumSamples(numSamples);
+    //setNumSamples(numSamples);
+    setRate(rate);
+    //rate.reset(sampleRate, LEVEL_SMOOTHING_TIME);
   }
 
   void releaseResources()
@@ -67,26 +69,40 @@ public:
   {
     for (int ch = buffer.getNumChannels(); --ch >= 0; ) 
     {
+      ratio = static_cast<int> (rate);
+      std::cout << ratio;
       for (unsigned int smp = 0; smp <= buffer.getNumSamples(); smp++ )
       {
         float *val = buffer.getWritePointer(ch);
-        if (numSamples != buffer.getNumSamples())
+        
+        //if (numSamples != buffer.getNumSamples())
+        if (ratio > 1)
         {
-          if ( smp%(buffer.getNumSamples() - numSamples) != 0 ) 
+          //if ( smp%(buffer.getNumSamples() - numSamples) != 0 ) 
+          if ( smp%ratio != 0 )
             val[smp] = val[smp - 1];
         }
       }
     }
   }
 
-  void setNumSamples(int newValue)
+  //void setNumSamples(int newValue)
+  //{
+  //  numSamples = newValue;
+  //}
+
+  void setRate (float newValue)
   {
-    numSamples = newValue;
+    rate = newValue;
   }
 
 private:
 
-  int numSamples;
+  //int numSamples;
+  
+  float rate;
+  //SmoothedValue<float, ValueSmoothingTypes::Linear> rate;
+  int ratio;
 
   JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(Sampler);
 };

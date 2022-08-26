@@ -6,8 +6,11 @@
 #define NAME_BD "bd"
 #define DEFAULT_BD 32
 
-#define NAME_NS "ns"
-#define DEFAULT_NS 512
+//#define NAME_NS "ns"
+//#define DEFAULT_NS 512
+
+#define NAME_RT "rt"
+#define DEFAULT_RT 1.0f
 
 using namespace juce;
 
@@ -16,12 +19,15 @@ MyBitCrushAudioProcessor::MyBitCrushAudioProcessor()
     : parameters(*this, nullptr, "MyBitCrushParameters", {
         std::make_unique<AudioParameterFloat>(NAME_DW, "Dry/Wet", 0.0f, 1.0f, DEFAULT_DW),
         std::make_unique<AudioParameterInt>(NAME_BD, "Bit Depth", 1, 32, DEFAULT_BD),
-        std::make_unique<AudioParameterInt>(NAME_NS, "N Samples", 1, 512, DEFAULT_NS)
+        //std::make_unique<AudioParameterInt>(NAME_NS, "N Samples", 1, 512, DEFAULT_NS)
+        std::make_unique<AudioParameterFloat>(NAME_RT, "Rate", NormalisableRange<float>(1.0f, 100.0f), DEFAULT_RT)
     })
 {
     parameters.addParameterListener(NAME_DW, this);
     parameters.addParameterListener(NAME_BD, this);
-    parameters.addParameterListener(NAME_NS, this);
+    //parameters.addParameterListener(NAME_NS, this);
+    parameters.addParameterListener(NAME_RT, this);
+
 }
 
 MyBitCrushAudioProcessor::~MyBitCrushAudioProcessor()
@@ -86,8 +92,11 @@ void MyBitCrushAudioProcessor::parameterChanged(const String& paramID, float new
     if (paramID == NAME_BD)
         quantizer.setBitDepth(newValue);
 
-    if (paramID == NAME_NS)
-        sampler.setNumSamples(newValue);
+    //if (paramID == NAME_NS)
+    //    sampler.setNumSamples(newValue);
+
+    if (paramID == NAME_RT)
+        sampler.setRate(newValue);
 }
 
 //==============================================================================
