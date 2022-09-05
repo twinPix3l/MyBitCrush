@@ -69,17 +69,17 @@ public:
   {
     for (int ch = buffer.getNumChannels(); --ch >= 0; ) 
     {
-      ratio = static_cast<int> (rate);
-      std::cout << ratio;
       for (unsigned int smp = 0; smp <= buffer.getNumSamples(); smp++ )
       {
         float *val = buffer.getWritePointer(ch);
-        
+        //ratio = static_cast<int> (rate);
+        //std::cout << ratio;
+
         //if (numSamples != buffer.getNumSamples())
-        if (ratio > 1)
+        if (rate > 1)
         {
           //if ( smp%(buffer.getNumSamples() - numSamples) != 0 ) 
-          if ( smp%ratio != 0 )
+          if ( smp%static_cast<int>(rate) != 0 )
             val[smp] = val[smp - 1];
         }
       }
@@ -102,7 +102,30 @@ private:
   
   float rate;
   //SmoothedValue<float, ValueSmoothingTypes::Linear> rate;
-  int ratio;
+  //int ratio;
 
   JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(Sampler);
+};
+
+class Modder
+{
+public:
+  Modder() {}
+  ~Modder() {}
+
+  void setMode (bool newValue)
+  {
+    mode = newValue;
+  }
+
+  bool getMode()
+  {
+    return mode;
+  }
+
+private:
+
+  bool mode;
+
+  JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(Modder);
 };

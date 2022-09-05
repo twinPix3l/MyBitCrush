@@ -5,6 +5,7 @@
   <MAINGROUP id="BAYZ3I" name="MyBitCrush">
     <GROUP id="{3DE5787C-BDAF-1399-94A7-C5081ADC129E}" name="Source">
       <GROUP id="{EA4B1F07-C2C7-3838-CAD6-F7F45A6376B8}" name="DSP">
+        <FILE id="PjfPI5" name="Parameters.h" compile="0" resource="0" file="Source/Parameters.h"/>
         <FILE id="GiARyC" name="BitCrusher.h" compile="0" resource="0" file="Source/BitCrusher.h"/>
         <FILE id="xHR4Po" name="DryWet.h" compile="0" resource="0" file="Source/DryWet.h"/>
       </GROUP>

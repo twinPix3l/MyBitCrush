@@ -1,4 +1,5 @@
 #include "PluginProcessor.h"
+#include "Parameters.h"
 
 #define NAME_DW "dw"
 #define DEFAULT_DW 0.5f
@@ -12,23 +13,27 @@
 #define NAME_RT "rt"
 #define DEFAULT_RT 1.0f
 
-using namespace juce;
+#define NAME_MD "md"
+#define DEFAULT_MD 0
+
+//using namespace juce;
 
 //==============================================================================
 MyBitCrushAudioProcessor::MyBitCrushAudioProcessor()
-    : parameters(*this, nullptr, "MyBitCrushParameters", {
-        std::make_unique<AudioParameterFloat>(NAME_DW, "Dry/Wet", 0.0f, 1.0f, DEFAULT_DW),
-        std::make_unique<AudioParameterInt>(NAME_BD, "Bit Depth", 1, 32, DEFAULT_BD),
-        //std::make_unique<AudioParameterInt>(NAME_NS, "N Samples", 1, 512, DEFAULT_NS)
-        std::make_unique<AudioParameterFloat>(NAME_RT, "Rate", NormalisableRange<float>(1.0f, 100.0f), DEFAULT_RT)
-    })
+    : parameters(*this, nullptr, "MyBitCrushParameters", Parameters::createParameterLayout())
 {
     parameters.addParameterListener(NAME_DW, this);
     parameters.addParameterListener(NAME_BD, this);
     //parameters.addParameterListener(NAME_NS, this);
     parameters.addParameterListener(NAME_RT, this);
+    parameters.addParameterListener(NAME_MD, this);
 
+    drywetter.setDryWetRatio(DEFAULT_DW);
+    quantizer.setBitDepth(DEFAULT_BD);
+    sampler.setRate(DEFAULT_RT);
+    modder.setMode(DEFAULT_MD);
 }
+
 
 MyBitCrushAudioProcessor::~MyBitCrushAudioProcessor()
 {
@@ -54,10 +59,17 @@ void MyBitCrushAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer, j
     juce::ScopedNoDenormals noDenormals;
 
     drywetter.setDry(buffer);
+    
+    switch (modder.getMode()) {
 
-    quantizer.processBlock(buffer);
-
-    sampler.processBlock(buffer);
+        case 0:
+            quantizer.processBlock(buffer);
+            sampler.processBlock(buffer);
+        
+        case 1:
+            sampler.processBlock(buffer);
+            quantizer.processBlock(buffer);
+    }
 
     drywetter.merge(buffer);
 }
@@ -97,6 +109,9 @@ void MyBitCrushAudioProcessor::parameterChanged(const String& paramID, float new
 
     if (paramID == NAME_RT)
         sampler.setRate(newValue);
+    
+    if (paramID == NAME_MD)
+        modder.setMode(newValue);
 }
 
 //==============================================================================
