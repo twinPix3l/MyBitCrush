@@ -1,20 +1,6 @@
 #include "PluginProcessor.h"
 #include "Parameters.h"
-
-#define NAME_DW "dw"
-#define DEFAULT_DW 0.5f
-
-#define NAME_BD "bd"
-#define DEFAULT_BD 32
-
-//#define NAME_NS "ns"
-//#define DEFAULT_NS 512
-
-#define NAME_RT "rt"
-#define DEFAULT_RT 1.0f
-
-#define NAME_MD "md"
-#define DEFAULT_MD 0
+#include "PluginEditor.h"
 
 //using namespace juce;
 
@@ -60,7 +46,8 @@ void MyBitCrushAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer, j
 
     drywetter.setDry(buffer);
     
-    switch (modder.getMode()) {
+    switch (modder.getMode())
+    {
 
         case 0:
             quantizer.processBlock(buffer);
@@ -77,7 +64,7 @@ void MyBitCrushAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer, j
 //==============================================================================
 juce::AudioProcessorEditor* MyBitCrushAudioProcessor::createEditor()
 {
-    return nullptr;
+    return new MyBitCrushAudioProcessorEditor(*this, parameters);
 }
 
 //==============================================================================

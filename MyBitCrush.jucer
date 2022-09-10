@@ -1,9 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <JUCERPROJECT id="kyi8Ng" name="MyBitCrush" projectType="audioplug" jucerFormatVersion="1"
-              pluginFormats="buildStandalone,buildVST3" pluginChannelConfigs="{1,1},{2,2}">
+              pluginFormats="buildStandalone,buildVST3" pluginChannelConfigs="{1,1},{2,2},{1,2},{2,1}">
   <MAINGROUP id="BAYZ3I" name="MyBitCrush">
     <GROUP id="{3DE5787C-BDAF-1399-94A7-C5081ADC129E}" name="Source">
+      <GROUP id="{4565BEC2-81F9-682F-0A3C-690C42306AE9}" name="GUI">
+        <FILE id="Qpwzlo" name="PluginEditor.h" compile="0" resource="0" file="Source/PluginEditor.h"/>
+        <FILE id="PN5m8L" name="PluginEditor.cpp" compile="1" resource="0"
+              file="Source/PluginEditor.cpp"/>
+      </GROUP>
       <GROUP id="{EA4B1F07-C2C7-3838-CAD6-F7F45A6376B8}" name="DSP">
         <FILE id="PjfPI5" name="Parameters.h" compile="0" resource="0" file="Source/Parameters.h"/>
         <FILE id="GiARyC" name="BitCrusher.h" compile="0" resource="0" file="Source/BitCrusher.h"/>

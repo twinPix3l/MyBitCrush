@@ -25,7 +25,7 @@ namespace Parameters
     std::vector<std::unique_ptr<RangedAudioParameter>> params;
 
     params.push_back(std::make_unique<AudioParameterFloat>(NAME_DW, "Dry/Wet", 0.0f, 1.0f, DEFAULT_DW));
-    params.push_back(std::make_unique<AudioParameterInt>(NAME_BD, "Bit Depth", 1, 32, DEFAULT_BD));
+    params.push_back(std::make_unique<AudioParameterInt>(NAME_BD, "BitDepth", 1, 32, DEFAULT_BD));
     //std::make_unique<AudioParameterInt>(NAME_NS, "N Samples", 1, 512, DEFAULT_NS)
     params.push_back(std::make_unique<AudioParameterFloat>(NAME_RT, "Rate", NormalisableRange<float>(1.0f, 70.0f), DEFAULT_RT));
     params.push_back(std::make_unique<AudioParameterBool>(NAME_MD, "Invert", DEFAULT_MD));
