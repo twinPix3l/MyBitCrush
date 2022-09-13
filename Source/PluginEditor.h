@@ -10,8 +10,9 @@ typedef AudioProcessorValueTreeState::SliderAttachment SliderAttachment;
 typedef AudioProcessorValueTreeState::ButtonAttachment ButtonAttachment;
 
 class MyBitCrushAudioProcessorEditor : public juce::AudioProcessorEditor/*,
-                                        //private Slider::Listener/*,
-                                        //private AudioProcessorParameter::Listener*/
+                                       //public juce::LookAndFeel
+                                       /*private Slider::Listener/*,
+                                       //private AudioProcessorParameter::Listener*/
 {
 public:
     MyBitCrushAudioProcessorEditor (MyBitCrushAudioProcessor& p, AudioProcessorValueTreeState& vts);
@@ -29,16 +30,22 @@ private:
     std::unique_ptr<SliderAttachment> bdAttachment;
     std::unique_ptr<SliderAttachment> rtAttachment;
     std::unique_ptr<ButtonAttachment> mdAttachment;
+    std::unique_ptr<SliderAttachment> fqAttachment;
+    std::unique_ptr<SliderAttachment> amAttachment;
 
     std::unique_ptr<juce::Slider> dwSlider;
     std::unique_ptr<juce::Slider> bdSlider;
     std::unique_ptr<juce::Slider> rtSlider;
     std::unique_ptr<juce::ToggleButton> mdButton;
+    std::unique_ptr<juce::Slider> fqSlider;
+    std::unique_ptr<juce::Slider> amSlider;
 
     std::unique_ptr<juce::Label> dwLabel;
     std::unique_ptr<juce::Label> bdLabel;
     std::unique_ptr<juce::Label> rtLabel;
     std::unique_ptr<juce::Label> mdLabel;
+    std::unique_ptr<juce::Label> fqLabel;
+    std::unique_ptr<juce::Label> amLabel;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (MyBitCrushAudioProcessorEditor) //MACRO DI JUCE = "VolumeFaderAudioProcessorEditor" deve essere dichiarata non copyable
                                                                                    //                 e gli viene collegato un memory leak detector

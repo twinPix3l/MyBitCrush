@@ -3,6 +3,7 @@
 #include <JuceHeader.h>
 #include "DryWet.h"
 #include "BitCrusher.h"
+#include "LFO.h"
 
 class MyBitCrushAudioProcessor  : public juce::AudioProcessor, public AudioProcessorValueTreeState::Listener
 {
@@ -43,7 +44,7 @@ public:
 private:
 
     void parameterChanged(const String& paramID, float newValue) override;
-
+    
     AudioProcessorValueTreeState parameters;
 
     DryWet drywetter;
@@ -53,6 +54,12 @@ private:
     Sampler sampler;
 
     Modder modder;
+
+    NaiveOscillator LFO;
+
+    RateModulation rateAdapter;
+
+    AudioBuffer<float> modulationSignal;
 
     //==============================================================================
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (MyBitCrushAudioProcessor)

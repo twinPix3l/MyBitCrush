@@ -10,6 +10,7 @@
               file="Source/PluginEditor.cpp"/>
       </GROUP>
       <GROUP id="{EA4B1F07-C2C7-3838-CAD6-F7F45A6376B8}" name="DSP">
+        <FILE id="rqoLN1" name="LFO.h" compile="0" resource="0" file="Source/LFO.h"/>
         <FILE id="PjfPI5" name="Parameters.h" compile="0" resource="0" file="Source/Parameters.h"/>
         <FILE id="GiARyC" name="BitCrusher.h" compile="0" resource="0" file="Source/BitCrusher.h"/>
         <FILE id="xHR4Po" name="DryWet.h" compile="0" resource="0" file="Source/DryWet.h"/>

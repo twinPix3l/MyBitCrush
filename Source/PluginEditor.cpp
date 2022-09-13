@@ -12,28 +12,31 @@ MyBitCrushAudioProcessorEditor::MyBitCrushAudioProcessorEditor (MyBitCrushAudioP
 
   dwSlider.reset (new juce::Slider ("Dry/Wet"));
   addAndMakeVisible (dwSlider.get());
-  dwSlider->setValue (0.5);
-  dwSlider->setRange (0, 1.0, 0);
-  dwSlider->setSliderStyle (juce::Slider::LinearHorizontal);
+  dwSlider->setRange (0, 0.5, 0);
+  dwSlider->setValue(DEFAULT_DW);
+  dwSlider->Slider::setColour(Slider::trackColourId, Colours::yellow);
+  
   dwSlider->setTextBoxStyle (juce::Slider::TextBoxRight, false, 80, 20);
 
   dwSlider->setBounds (160, 32, 500, 16);
 
   bdSlider.reset (new juce::Slider ("BitDepth"));
   addAndMakeVisible (bdSlider.get());
-  bdSlider->setValue (32);
   bdSlider->setRange (1, 32, 1);
-  bdSlider->setSliderStyle (juce::Slider::LinearHorizontal);
-  bdSlider->setTextBoxStyle (juce::Slider::TextBoxRight, false, 80, 20);
+  bdSlider->setValue(DEFAULT_BD);
+  bdSlider->setSliderStyle (Slider::LinearHorizontal);
+  bdSlider->Slider::setColour(Slider::backgroundColourId, Colours::yellow);
+  bdSlider->setTextBoxStyle (Slider::TextBoxRight, false, 80, 20);
 
   bdSlider->setBounds (160, 64, 500, 16);
 
   rtSlider.reset (new juce::Slider ("Rate"));
   addAndMakeVisible (rtSlider.get());
-  dwSlider->setValue (0.5);
   rtSlider->setRange (1, 70, 0);
-  rtSlider->setSliderStyle (juce::Slider::LinearHorizontal);
-  rtSlider->setTextBoxStyle (juce::Slider::TextBoxRight, false, 80, 20);
+  rtSlider->setValue(DEFAULT_RT);
+  rtSlider->setSliderStyle (Slider::LinearHorizontal);
+  rtSlider->Slider::setColour(Slider::trackColourId, Colours::yellow);
+  rtSlider->setTextBoxStyle (Slider::TextBoxRight, false, 80, 20);
 
   rtSlider->setBounds (160, 96, 500, 16);
 
@@ -42,10 +45,32 @@ MyBitCrushAudioProcessorEditor::MyBitCrushAudioProcessorEditor (MyBitCrushAudioP
 
   mdButton->setBounds (160, 128, 72, 24);
 
+  fqSlider.reset (new juce::Slider ("LFO freq (Hz)"));
+  addAndMakeVisible (fqSlider.get());
+  fqSlider->setRange (0.1, 20.0, 0);
+  fqSlider->setValue(DEFAULT_FQ);
+  fqSlider->setSliderStyle (Slider::LinearHorizontal);
+  fqSlider->Slider::setColour(Slider::trackColourId, Colours::yellow);
+  fqSlider->setTextBoxStyle (Slider::TextBoxRight, false, 80, 20);
+
+  fqSlider->setBounds (160, 160, 500, 16);
+
+  amSlider.reset (new juce::Slider ("Mod Amount"));
+  addAndMakeVisible (amSlider.get());
+  amSlider->setRange (0.0, 1.0, 0);
+  amSlider->setValue(DEFAULT_AM);
+  amSlider->setSliderStyle (Slider::LinearHorizontal);
+  amSlider->Slider::setColour(Slider::trackColourId, Colours::yellow);
+  amSlider->setTextBoxStyle (Slider::TextBoxRight, false, 80, 20);
+
+  amSlider->setBounds (160, 192, 500, 16);
+
   dwAttachment.reset(new SliderAttachment(parameters, NAME_DW, *dwSlider));
   bdAttachment.reset(new SliderAttachment(parameters, NAME_BD, *bdSlider));
   rtAttachment.reset(new SliderAttachment(parameters, NAME_RT, *rtSlider));
   mdAttachment.reset(new ButtonAttachment(parameters, NAME_MD, *mdButton));
+  fqAttachment.reset(new SliderAttachment(parameters, NAME_FQ, *fqSlider));
+  amAttachment.reset(new SliderAttachment(parameters, NAME_AM, *amSlider));
 
   dwLabel.reset (new juce::Label ("Dry/Wet"));
   addAndMakeVisible (dwLabel.get());
@@ -62,6 +87,16 @@ MyBitCrushAudioProcessorEditor::MyBitCrushAudioProcessorEditor (MyBitCrushAudioP
   rtLabel->setText("Rate", juce::dontSendNotification);
   rtLabel->attachToComponent(rtSlider.get(), true);
 
+  fqLabel.reset (new juce::Label ("LFO freq (Hz)"));
+  addAndMakeVisible (fqLabel.get());
+  fqLabel->setText("Freq LFO (Hz)", juce::dontSendNotification);
+  fqLabel->attachToComponent(fqSlider.get(), true);
+
+  amLabel.reset (new juce::Label ("Mod Amount"));
+  addAndMakeVisible (amLabel.get());
+  amLabel->setText("Mod Amount", juce::dontSendNotification);
+  amLabel->attachToComponent(amSlider.get(), true);
+
   setSize (800, 400);
 
 }
@@ -72,23 +107,29 @@ MyBitCrushAudioProcessorEditor::~MyBitCrushAudioProcessorEditor()
   bdAttachment = nullptr;
   rtAttachment = nullptr;
   mdAttachment = nullptr;
+  fqAttachment = nullptr;
+  amAttachment = nullptr;
   //[/Destructor_pre]
 
   dwSlider = nullptr;
   bdSlider = nullptr;
   rtSlider = nullptr;
   mdButton = nullptr;
+  fqSlider = nullptr;
+  amSlider = nullptr;
 
   dwLabel = nullptr;
   bdLabel = nullptr;
   rtLabel = nullptr;
+  fqLabel = nullptr;
+  amLabel = nullptr;
 
 }
 
 //==============================================================================
 void MyBitCrushAudioProcessorEditor::paint (juce::Graphics& g)
 {
-    g.fillAll(juce::Colours::black); //fillAll = metodo del graphic context
+  g.fillAll(juce::Colours::black); //fillAll = metodo del graphic context
 }
 
 void MyBitCrushAudioProcessorEditor::resized()

@@ -13,11 +13,16 @@ MyBitCrushAudioProcessor::MyBitCrushAudioProcessor()
     //parameters.addParameterListener(NAME_NS, this);
     parameters.addParameterListener(NAME_RT, this);
     parameters.addParameterListener(NAME_MD, this);
+    parameters.addParameterListener(NAME_FQ, this);
+    parameters.addParameterListener(NAME_AM, this);
 
     drywetter.setDryWetRatio(DEFAULT_DW);
     quantizer.setBitDepth(DEFAULT_BD);
     sampler.setRate(DEFAULT_RT);
     modder.setMode(DEFAULT_MD);
+    LFO.setFrequency(DEFAULT_FQ);
+    rateAdapter.setModAmount(DEFAULT_AM);
+    rateAdapter.setParameter(DEFAULT_RT);
 }
 
 
@@ -31,6 +36,9 @@ void MyBitCrushAudioProcessor::prepareToPlay (double sampleRate, int samplesPerB
     drywetter.prepareToPlay(sampleRate, samplesPerBlock);
     quantizer.prepareToPlay(sampleRate, samplesPerBlock);
     sampler.prepareToPlay(sampleRate, samplesPerBlock);
+    LFO.prepareToPlay(sampleRate);
+    modulationSignal.setSize(2, samplesPerBlock);
+    rateAdapter.prepareToPlay(sampleRate);
 }
 
 void MyBitCrushAudioProcessor::releaseResources()
@@ -38,24 +46,34 @@ void MyBitCrushAudioProcessor::releaseResources()
     drywetter.releaseResources();
     quantizer.releaseResources();
     sampler.releaseResources();
+    modulationSignal.setSize(0,0);
 }
 
 void MyBitCrushAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer, juce::MidiBuffer& midiMessages)
 {
     juce::ScopedNoDenormals noDenormals;
 
+    const auto numSamples = buffer.getNumSamples();
+
+    // Genero una modulante
+    LFO.getNextAudioBlock(modulationSignal, numSamples);
+
+    // Scalare la modulante
+    rateAdapter.processBlock(modulationSignal, numSamples);
+
     drywetter.setDry(buffer);
     
     switch (modder.getMode())
     {
-
         case 0:
             quantizer.processBlock(buffer);
             sampler.processBlock(buffer);
+            break;
         
         case 1:
             sampler.processBlock(buffer);
             quantizer.processBlock(buffer);
+            break;
     }
 
     drywetter.merge(buffer);
@@ -99,6 +117,12 @@ void MyBitCrushAudioProcessor::parameterChanged(const String& paramID, float new
     
     if (paramID == NAME_MD)
         modder.setMode(newValue);
+    
+    if (paramID == NAME_FQ)
+        LFO.setFrequency(newValue);
+    
+    if (paramID == NAME_AM)
+        rateAdapter.setModAmount(newValue);
 }
 
 //==============================================================================
