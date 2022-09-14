@@ -65,7 +65,7 @@ public:
 
   }
 
-  void processBlock(AudioBuffer<float>& buffer)
+  void processBlock(AudioBuffer<float>& buffer, AudioBuffer<float>& rateBuffer)
   {
     for (int ch = buffer.getNumChannels(); --ch >= 0; ) 
     {

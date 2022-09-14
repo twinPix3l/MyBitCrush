@@ -102,21 +102,21 @@ void processBlock(AudioBuffer<float>& buffer, const int numSamples)
   modAmount.applyGain(buffer, numSamples);
 
   // Sommo alla modulante il tempo di delay proveniente dal parametro
-  if (parameter.isSmoothing())
-    for (int smp = 0; smp < numSamples; smp++)
-    {
-      const auto param = parameter.getNextValue();
+  //if (parameter.isSmoothing())
+  //  for (int smp = 0; smp < numSamples; smp++)
+  //  {
+  //    const auto param = parameter.getNextValue();
 
-      for (int ch = 0; ch < numCh; ch++)
-      {  
-        bufferData[ch][smp] += param;
-      }
-    }
-    else
-      for (int ch = 0; ch < numCh; ch++)
-      {  
-        FloatVectorOperations::add(bufferData[ch], parameter.getCurrentValue(), numSamples);
-      }
+  //    for (int ch = 0; ch < numCh; ch++)
+  //    {  
+  //      bufferData[ch][smp] += param;
+  //    }
+  //  }
+  //  else
+  //    for (int ch = 0; ch < numCh; ch++)
+  //    {  
+  //      FloatVectorOperations::add(bufferData[ch], parameter.getCurrentValue(), numSamples);
+  //    }
 }
 
 private:
