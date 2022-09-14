@@ -12,9 +12,11 @@ MyBitCrushAudioProcessorEditor::MyBitCrushAudioProcessorEditor (MyBitCrushAudioP
 
   dwSlider.reset (new juce::Slider ("Dry/Wet"));
   addAndMakeVisible (dwSlider.get());
-  dwSlider->setValue (0.5);
   dwSlider->setRange (0, 1.0, 0);
+  dwSlider->setValue (DEFAULT_DW);
   dwSlider->setSliderStyle (juce::Slider::LinearHorizontal);
+  dwSlider->Slider::setColour(Slider::trackColourId, Colours::red);
+  dwSlider->Slider::setColour(Slider::backgroundColourId, Colours::green);
   dwSlider->setTextBoxStyle (juce::Slider::TextBoxRight, false, 80, 20);
 
   dwSlider->setBounds (160, 32, 500, 16);
@@ -24,6 +26,7 @@ MyBitCrushAudioProcessorEditor::MyBitCrushAudioProcessorEditor (MyBitCrushAudioP
   bdSlider->setValue (32);
   bdSlider->setRange (1, 32, 1);
   bdSlider->setSliderStyle (juce::Slider::LinearHorizontal);
+  bdSlider->Slider::setColour(Slider::backgroundColourId, Colours::yellow);
   bdSlider->setTextBoxStyle (juce::Slider::TextBoxRight, false, 80, 20);
 
   bdSlider->setBounds (160, 64, 500, 16);
@@ -33,6 +36,7 @@ MyBitCrushAudioProcessorEditor::MyBitCrushAudioProcessorEditor (MyBitCrushAudioP
   dwSlider->setValue (0.5);
   rtSlider->setRange (1, 70, 0);
   rtSlider->setSliderStyle (juce::Slider::LinearHorizontal);
+  rtSlider->Slider::setColour(Slider::trackColourId, Colours::yellow);
   rtSlider->setTextBoxStyle (juce::Slider::TextBoxRight, false, 80, 20);
 
   rtSlider->setBounds (160, 96, 500, 16);
