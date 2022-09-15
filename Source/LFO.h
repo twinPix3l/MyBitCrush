@@ -1,8 +1,9 @@
 #pragma once
 
 #include <JuceHeader.h>
+#include "Parameters.h"
 
-#define GLIDE_TIME 0.02f
+#define GLIDE_TIME 0.01f
 #define SMOOTHING_TIME 0.02f
 
 using namespace juce;
@@ -40,10 +41,10 @@ public:
 
   float getNextAudioSample()
   {
-    auto sampleValue = 0.0f;
+    //auto sampleValue = 0.0f;
 
     // Sine wave
-    sampleValue = sin(MathConstants<float>::twoPi * currentPhase);
+    const auto sampleValue = sin(MathConstants<float>::twoPi * currentPhase);
 
     //phaseIncrement = frequency.isSmoothing() ? frequency.getNextValue() * samplePeriod : phaseIncrement;
     phaseIncrement = frequency.getNextValue() * samplePeriod;
@@ -101,22 +102,25 @@ void processBlock(AudioBuffer<float>& buffer, const int numSamples)
   // Scalo la modulante tra 0 e la modulazione massima desiderata
   modAmount.applyGain(buffer, numSamples);
 
-  // Sommo alla modulante il tempo di delay proveniente dal parametro
-  //if (parameter.isSmoothing())
-  //  for (int smp = 0; smp < numSamples; smp++)
-  //  {
-  //    const auto param = parameter.getNextValue();
+  // Sommo alla modulante il RATE proveniente dal parametro
+  if (parameter.isSmoothing())
+    for (int smp = 0; smp < numSamples; smp++)
+    {
+      const auto param = parameter.getNextValue();
 
-  //    for (int ch = 0; ch < numCh; ch++)
-  //    {  
-  //      bufferData[ch][smp] += param;
-  //    }
-  //  }
-  //  else
-  //    for (int ch = 0; ch < numCh; ch++)
-  //    {  
-  //      FloatVectorOperations::add(bufferData[ch], parameter.getCurrentValue(), numSamples);
-  //    }
+      for (int ch = 0; ch < numCh; ch++)
+      {  
+        bufferData[ch][smp] += param;
+      }
+    }
+    else
+      for (int ch = 0; ch < numCh; ch++)
+      {  
+        FloatVectorOperations::add(bufferData[ch], parameter.getCurrentValue(), numSamples);
+      }
+    // Controllo di esssere dentro al rate massimo  
+    for (int ch = 0; ch < numCh; ch++)
+      FloatVectorOperations::min(bufferData[ch], bufferData[ch], MAX_RT, numSamples);
 }
 
 private:

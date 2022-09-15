@@ -51,7 +51,8 @@ private:
 
     Quantizer quantizer;
 
-    Sampler sampler;
+    //Sampler sampler;
+    ModSampler modSampler;
 
     Modder modder;
 

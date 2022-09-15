@@ -18,7 +18,7 @@ MyBitCrushAudioProcessor::MyBitCrushAudioProcessor()
 
     drywetter.setDryWetRatio(DEFAULT_DW);
     quantizer.setBitDepth(DEFAULT_BD);
-    sampler.setRate(DEFAULT_RT);
+    //sampler.setRate(DEFAULT_RT);
     modder.setMode(DEFAULT_MD);
     LFO.setFrequency(DEFAULT_FQ);
     rateAdapter.setModAmount(DEFAULT_AM);
@@ -34,7 +34,8 @@ void MyBitCrushAudioProcessor::prepareToPlay(double sampleRate, int samplesPerBl
 {
     drywetter.prepareToPlay(sampleRate, samplesPerBlock);
     quantizer.prepareToPlay(sampleRate, samplesPerBlock);
-    sampler.prepareToPlay(sampleRate, samplesPerBlock);
+    //sampler.prepareToPlay(sampleRate, samplesPerBlock);
+    modSampler.prepareToPlay(sampleRate, samplesPerBlock);
     LFO.prepareToPlay(sampleRate);
     modulationSignal.setSize(2, samplesPerBlock);
     rateAdapter.prepareToPlay(sampleRate);
@@ -44,7 +45,8 @@ void MyBitCrushAudioProcessor::releaseResources()
 {
     drywetter.releaseResources();
     quantizer.releaseResources();
-    sampler.releaseResources();
+    //sampler.releaseResources();
+    modSampler.releaseResources();
     modulationSignal.setSize(0, 0);
 }
 
@@ -66,11 +68,11 @@ void MyBitCrushAudioProcessor::processBlock(juce::AudioBuffer<float> &buffer, ju
     {
     case 0:
         quantizer.processBlock(buffer);
-        sampler.processBlock(buffer, modulationSignal);
+        modSampler.processBlock(buffer, modulationSignal);
         break;
 
     case 1:
-        sampler.processBlock(buffer, modulationSignal);
+        modSampler.processBlock(buffer, modulationSignal);
         quantizer.processBlock(buffer);
         break;
     }
@@ -111,11 +113,9 @@ void MyBitCrushAudioProcessor::parameterChanged(const String &paramID, float new
     if (paramID == NAME_BD)
         quantizer.setBitDepth(newValue);
 
-    // if (paramID == NAME_NS)
-    //     sampler.setNumSamples(newValue);
-
     if (paramID == NAME_RT)
-        sampler.setRate(newValue);
+        //sampler.setRate(newValue);
+        rateAdapter.setParameter(newValue);
 
     if (paramID == NAME_MD)
         modder.setMode(newValue);

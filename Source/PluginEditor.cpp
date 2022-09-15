@@ -57,7 +57,7 @@ MyBitCrushAudioProcessorEditor::MyBitCrushAudioProcessorEditor (MyBitCrushAudioP
 
   amSlider.reset (new juce::Slider ("Mod Amount"));
   addAndMakeVisible (amSlider.get());
-  amSlider->setRange (0.0, 1.0, 0);
+  amSlider->setRange (0.0, MAX_RT / 2, 0);
   amSlider->setValue(DEFAULT_AM);
   amSlider->setSliderStyle (Slider::LinearHorizontal);
   amSlider->Slider::setColour(Slider::trackColourId, Colours::yellow);
@@ -129,7 +129,7 @@ MyBitCrushAudioProcessorEditor::~MyBitCrushAudioProcessorEditor()
 //==============================================================================
 void MyBitCrushAudioProcessorEditor::paint (juce::Graphics& g)
 {
-  g.fillAll(juce::Colours::black); //fillAll = metodo del graphic context
+  g.fillAll(juce::Colours::transparentBlack); //fillAll = metodo del graphic context
 }
 
 void MyBitCrushAudioProcessorEditor::resized()
