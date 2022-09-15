@@ -14,7 +14,8 @@ MyBitCrushAudioProcessorEditor::MyBitCrushAudioProcessorEditor (MyBitCrushAudioP
   addAndMakeVisible (dwSlider.get());
   dwSlider->setRange (0, 0.5, 0);
   dwSlider->setValue(DEFAULT_DW);
-  dwSlider->Slider::setColour(Slider::trackColourId, Colours::yellow);
+  dwSlider->Slider::setColour(Slider::trackColourId, Colours::darkseagreen);
+  dwSlider->Slider::setColour(Slider::backgroundColourId, Colours::darkred);
   
   dwSlider->setTextBoxStyle (juce::Slider::TextBoxRight, false, 80, 20);
 
@@ -65,12 +66,22 @@ MyBitCrushAudioProcessorEditor::MyBitCrushAudioProcessorEditor (MyBitCrushAudioP
 
   amSlider->setBounds (160, 192, 500, 16);
 
+  wfSlider.reset (new juce::Slider ("Waveform"));
+  addAndMakeVisible (wfSlider.get());
+  wfSlider->setRange (0, 4, 1);
+  wfSlider->setValue(DEFAULT_WF);
+  wfSlider->setSliderStyle (Slider::LinearHorizontal);
+  wfSlider->setTextBoxStyle (Slider::TextBoxRight, false, 80, 20);
+
+  wfSlider->setBounds (160, 224, 500, 16);
+
   dwAttachment.reset(new SliderAttachment(parameters, NAME_DW, *dwSlider));
   bdAttachment.reset(new SliderAttachment(parameters, NAME_BD, *bdSlider));
   rtAttachment.reset(new SliderAttachment(parameters, NAME_RT, *rtSlider));
   mdAttachment.reset(new ButtonAttachment(parameters, NAME_MD, *mdButton));
   fqAttachment.reset(new SliderAttachment(parameters, NAME_FQ, *fqSlider));
   amAttachment.reset(new SliderAttachment(parameters, NAME_AM, *amSlider));
+  wfAttachment.reset(new SliderAttachment(parameters, NAME_WF, *wfSlider));
 
   dwLabel.reset (new juce::Label ("Dry/Wet"));
   addAndMakeVisible (dwLabel.get());
@@ -97,6 +108,11 @@ MyBitCrushAudioProcessorEditor::MyBitCrushAudioProcessorEditor (MyBitCrushAudioP
   amLabel->setText("Mod Amount", juce::dontSendNotification);
   amLabel->attachToComponent(amSlider.get(), true);
 
+  wfLabel.reset (new juce::Label ("Waveform"));
+  addAndMakeVisible (wfLabel.get());
+  wfLabel->setText("LFO Shape", juce::dontSendNotification);
+  wfLabel->attachToComponent(wfSlider.get(), true);
+
   setSize (800, 400);
 
 }
@@ -109,6 +125,8 @@ MyBitCrushAudioProcessorEditor::~MyBitCrushAudioProcessorEditor()
   mdAttachment = nullptr;
   fqAttachment = nullptr;
   amAttachment = nullptr;
+  wfAttachment = nullptr;
+
   //[/Destructor_pre]
 
   dwSlider = nullptr;
@@ -117,13 +135,14 @@ MyBitCrushAudioProcessorEditor::~MyBitCrushAudioProcessorEditor()
   mdButton = nullptr;
   fqSlider = nullptr;
   amSlider = nullptr;
+  wfSlider = nullptr;
 
   dwLabel = nullptr;
   bdLabel = nullptr;
   rtLabel = nullptr;
   fqLabel = nullptr;
   amLabel = nullptr;
-
+  wfLabel = nullptr;
 }
 
 //==============================================================================

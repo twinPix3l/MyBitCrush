@@ -25,6 +25,11 @@ public:
     frequency.setTargetValue(newValue);
   }
 
+  void setWaveform(int newValue)
+  {
+    waveform = newValue;
+  }
+
   void getNextAudioBlock(AudioBuffer<float>& buffer, const int numSamples)
   {
     const int numCh = buffer.getNumChannels();
@@ -41,10 +46,33 @@ public:
 
   float getNextAudioSample()
   {
-    //auto sampleValue = 0.0f;
+    auto sampleValue = 0.0f;
+
+    switch (waveform)
+    {
+      case 0: // Sine wave
+        sampleValue = sin(MathConstants<float>::twoPi * currentPhase);
+        break;
+
+      case 1: // Triangle wave
+        sampleValue = 4.0f * abs(currentPhase - 0.5f) - 1.0f;
+        break;
+
+      case 2: // Saw Up wave
+        sampleValue = 2.0f * currentPhase - 1.0f;
+        break;
+
+      case 3: // Saw Down wave
+        sampleValue = -2.0f * currentPhase - 1.0f;
+        break;
+
+      case 4: // Square wave
+        sampleValue = (currentPhase > 0.5f) - (currentPhase < 0.5f);
+        break;
+    }
 
     // Sine wave
-    const auto sampleValue = sin(MathConstants<float>::twoPi * currentPhase);
+    //const auto sampleValue = sin(MathConstants<float>::twoPi * currentPhase);
 
     //phaseIncrement = frequency.isSmoothing() ? frequency.getNextValue() * samplePeriod : phaseIncrement;
     phaseIncrement = frequency.getNextValue() * samplePeriod;
@@ -60,6 +88,8 @@ private:
   float currentPhase = 0.0f;
   float phaseIncrement = 0.0f;
   SmoothedValue<float, ValueSmoothingTypes::Multiplicative> frequency;
+  
+  int waveform = 0;
 
   JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(NaiveOscillator)
 };

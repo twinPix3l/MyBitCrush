@@ -15,12 +15,14 @@ MyBitCrushAudioProcessor::MyBitCrushAudioProcessor()
     parameters.addParameterListener(NAME_MD, this);
     parameters.addParameterListener(NAME_FQ, this);
     parameters.addParameterListener(NAME_AM, this);
+    parameters.addParameterListener(NAME_WF, this);
 
     drywetter.setDryWetRatio(DEFAULT_DW);
     quantizer.setBitDepth(DEFAULT_BD);
     //sampler.setRate(DEFAULT_RT);
     modder.setMode(DEFAULT_MD);
     LFO.setFrequency(DEFAULT_FQ);
+    LFO.setWaveform(DEFAULT_WF);
     rateAdapter.setModAmount(DEFAULT_AM);
     rateAdapter.setParameter(DEFAULT_RT);
 }
@@ -125,6 +127,9 @@ void MyBitCrushAudioProcessor::parameterChanged(const String &paramID, float new
 
     if (paramID == NAME_AM)
         rateAdapter.setModAmount(newValue);
+    
+    if (paramID == NAME_WF)
+        LFO.setWaveform(newValue);
 }
 
 //==============================================================================

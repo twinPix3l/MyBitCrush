@@ -151,7 +151,8 @@ public:
           if ( smp%static_cast<int>(rateArray[jmin(ch, numModChannels - 1)][smp]) != 0 )
             val[smp] = val[smp - 1];
         }
-        std::cout << rateArray[jmin(ch, numModChannels - 1)][smp];
+        //std::cout << rateArray[jmin(ch, numModChannels - 1)][smp];
+        //std::cout << "                 ";
       } 
     }
   }
