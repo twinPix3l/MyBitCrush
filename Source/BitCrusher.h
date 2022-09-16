@@ -27,10 +27,8 @@ public:
       {
         int qLevels = powf(2, bitDepth - 1);
 
-        if ( val[smp] >= 0)
-          val[smp] = ceil(val[smp] * qLevels) / qLevels;
-        else
-          val[smp] = floor(val[smp] * qLevels) / qLevels;
+        ( val[smp] >= 0) ? (val[smp] = ceil(val[smp] * qLevels) / qLevels)
+                         : (val[smp] = floor(val[smp] * qLevels) / qLevels);
       }
     }
   };
@@ -85,14 +83,14 @@ public:
     }
   }
 
-  void setRate (float newValue)
+  void setRate (int newValue)
   {
     rate.setTargetValue(newValue);
   }
 
 private:
   
-  SmoothedValue<float, ValueSmoothingTypes::Linear> rate;
+  SmoothedValue<int, ValueSmoothingTypes::Linear> rate;
 
   JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(Sampler);
 };
@@ -142,17 +140,27 @@ public:
 
     for (int ch = 0; ch < numChannels; ch++ )
     {
-      for (unsigned int smp = 0; smp <= buffer.getNumSamples(); smp++ )
+      const auto numSamples = buffer.getNumSamples();
+      
+      const float *oldVal = buffer.getReadPointer(ch);
+      float limit = oldVal[numSamples];
+
+      for (unsigned int smp = 0; smp <= numSamples; smp++ )
       {
         float *val = buffer.getWritePointer(ch);
-
         if (rateArray[jmin(ch, numModChannels - 1)][smp] > 1)
-        { 
-          if ( smp%static_cast<int>(rateArray[jmin(ch, numModChannels - 1)][smp]) != 0 )
-            val[smp] = val[smp - 1];
+        {
+          // Tentativo di gestione dei casi limite
+          if (smp == 0)
+            val[smp] = limit;
+          else if (smp%static_cast<int>(rateArray[jmin(ch, numModChannels - 1)][smp]) != 0)
+            (val[smp] = val[smp - 1]);
         }
         //std::cout << rateArray[jmin(ch, numModChannels - 1)][smp];
-        //std::cout << "                 ";
+        //std::cout << smp;
+        //std::cout << "      ";
+        //std::cout << limit;
+        //std::cout << '\n';
       } 
     }
   }

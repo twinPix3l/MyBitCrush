@@ -14,8 +14,8 @@ MyBitCrushAudioProcessorEditor::MyBitCrushAudioProcessorEditor (MyBitCrushAudioP
   addAndMakeVisible (dwSlider.get());
   dwSlider->setRange (0, 0.5, 0);
   dwSlider->setValue(DEFAULT_DW);
-  dwSlider->Slider::setColour(Slider::trackColourId, Colours::darkseagreen);
-  dwSlider->Slider::setColour(Slider::backgroundColourId, Colours::darkred);
+  dwSlider->Slider::setColour(Slider::trackColourId, Colours::darkred);
+  dwSlider->Slider::setColour(Slider::backgroundColourId, Colours::darkseagreen);
   
   dwSlider->setTextBoxStyle (juce::Slider::TextBoxRight, false, 80, 20);
 
@@ -33,7 +33,7 @@ MyBitCrushAudioProcessorEditor::MyBitCrushAudioProcessorEditor (MyBitCrushAudioP
 
   rtSlider.reset (new juce::Slider ("Rate"));
   addAndMakeVisible (rtSlider.get());
-  rtSlider->setRange (1, 70, 0);
+  rtSlider->setRange (1, 70, 1);
   rtSlider->setValue(DEFAULT_RT);
   rtSlider->setSliderStyle (Slider::LinearHorizontal);
   rtSlider->Slider::setColour(Slider::trackColourId, Colours::yellow);
@@ -113,7 +113,7 @@ MyBitCrushAudioProcessorEditor::MyBitCrushAudioProcessorEditor (MyBitCrushAudioP
   wfLabel->setText("LFO Shape", juce::dontSendNotification);
   wfLabel->attachToComponent(wfSlider.get(), true);
 
-  setSize (800, 400);
+  setSize (800, 272);
 
 }
 

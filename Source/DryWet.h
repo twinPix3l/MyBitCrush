@@ -32,15 +32,12 @@ public:
 
   void merge(AudioBuffer<float>& buffer)
   {
-    //buffer.applyGain(wetLevel);
-    //drySignal.applyGain(dryLevel); // sostituito dall'ultimo input del metodo addFrom
     auto numSamples = buffer.getNumSamples();
     dryLevel.applyGain(drySignal, numSamples);
     wetLevel.applyGain(buffer, numSamples);
     
     for (int ch = buffer.getNumChannels(); --ch >= 0; ) 
     {
-      //buffer.addFrom(ch, 0, drySignal, ch, 0, buffer.getNumSamples(), dryLevel);
       buffer.addFrom(ch, 0, drySignal, ch, 0, numSamples); 
     }
   }
@@ -48,17 +45,13 @@ public:
   void setDryWetRatio(const float newValue)
   {
     dryWetRatio = newValue;
-    //dryLevel = sqrt(1 - dryWetRatio);
-    dryLevel.setTargetValue((1 - dryWetRatio));
-    //wetLevel = sqrt(dryWetRatio);
-    wetLevel.setTargetValue((dryWetRatio));
+    dryLevel.setTargetValue(/*sqrt*/(1 - dryWetRatio));
+    wetLevel.setTargetValue(/*sqrt*/(dryWetRatio));
   }
 
 private:
   
   float dryWetRatio = 0.5;
-  //float dryLevel;
-  //float wetLevel;
   SmoothedValue<float, ValueSmoothingTypes::Linear> dryLevel;
   SmoothedValue<float, ValueSmoothingTypes::Linear> wetLevel;
 

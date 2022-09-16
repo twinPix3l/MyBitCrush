@@ -1,9 +1,10 @@
 #pragma once
+#include "math.h"
 
 #include <JuceHeader.h>
 #include "Parameters.h"
 
-#define GLIDE_TIME 0.01f
+#define GLIDE_TIME 0.005f
 #define SMOOTHING_TIME 0.02f
 
 using namespace juce;
@@ -50,29 +51,33 @@ public:
 
     switch (waveform)
     {
-      case 0: // Sine wave
+      // Sine wave
+      case 0: 
         sampleValue = sin(MathConstants<float>::twoPi * currentPhase);
         break;
 
-      case 1: // Triangle wave
-        sampleValue = 4.0f * abs(currentPhase - 0.5f) - 1.0f;
+      // Triangle wave
+      case 1: 
+        //sampleValue = 4.0f * abs(currentPhase - 0.5f) - 1.0f; // Difficoltà nell'utilizzo di std::abs
+        (currentPhase - 0.5f) > 0 ? (sampleValue = 4.0f * (currentPhase - 0.5f) - 1.0f)
+                                  : (sampleValue = 4.0f * -(currentPhase - 0.5f) - 1.0f);
         break;
 
-      case 2: // Saw Up wave
+      // Saw Up wave
+      case 2: 
         sampleValue = 2.0f * currentPhase - 1.0f;
         break;
 
-      case 3: // Saw Down wave
+      // Saw Down wave
+      case 3:
         sampleValue = -2.0f * currentPhase - 1.0f;
         break;
 
-      case 4: // Square wave
+      // Square wave
+      case 4:
         sampleValue = (currentPhase > 0.5f) - (currentPhase < 0.5f);
         break;
     }
-
-    // Sine wave
-    //const auto sampleValue = sin(MathConstants<float>::twoPi * currentPhase);
 
     //phaseIncrement = frequency.isSmoothing() ? frequency.getNextValue() * samplePeriod : phaseIncrement;
     phaseIncrement = frequency.getNextValue() * samplePeriod;
@@ -125,14 +130,14 @@ void processBlock(AudioBuffer<float>& buffer, const int numSamples)
   // Scalo la modulante tra 0 e 1
   for (int ch = 0; ch < numCh; ch++)
   {
-    FloatVectorOperations::add(bufferData[ch], 1.0, numSamples);
+    FloatVectorOperations::add(bufferData[ch], 1.0f, numSamples);
     FloatVectorOperations::multiply(bufferData[ch], 0.5f, numSamples);
   }
 
   // Scalo la modulante tra 0 e la modulazione massima desiderata
   modAmount.applyGain(buffer, numSamples);
 
-  // Sommo alla modulante il RATE proveniente dal parametro
+  // Sommo alla modulante il rate proveniente dal parametro
   if (parameter.isSmoothing())
     for (int smp = 0; smp < numSamples; smp++)
     {
@@ -155,7 +160,7 @@ void processBlock(AudioBuffer<float>& buffer, const int numSamples)
 
 private:
 
-  SmoothedValue<float, ValueSmoothingTypes::Linear> parameter;
+  SmoothedValue<int, ValueSmoothingTypes::Linear> parameter;
   SmoothedValue<float, ValueSmoothingTypes::Linear> modAmount;
 
   JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(RateModulation)
