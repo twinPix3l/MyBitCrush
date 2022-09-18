@@ -111,7 +111,7 @@ void prepareToPlay(double sr)
   modAmount.reset(sr, SMOOTHING_TIME);
 }
 
-void setParameter(float newValue)
+void setParameter(int newValue)
 {
   parameter.setTargetValue(newValue);
 }
@@ -132,7 +132,9 @@ void processBlock(AudioBuffer<float>& buffer, const int numSamples)
   {
     FloatVectorOperations::add(bufferData[ch], 1.0f, numSamples);
     FloatVectorOperations::multiply(bufferData[ch], 0.5f, numSamples);
+    std::cout << bufferData[ch];
   }
+  
 
   // Scalo la modulante tra 0 e la modulazione massima desiderata
   modAmount.applyGain(buffer, numSamples);

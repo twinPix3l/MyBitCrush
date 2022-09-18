@@ -14,7 +14,6 @@ public:
 
   void releaseResources()
   {
-
   }
 
   void processBlock(AudioBuffer<float>& buffer)
@@ -53,13 +52,11 @@ public:
 
   void prepareToPlay(double sampleRate, int maxNumSamples)
   {
-    //setRate(rate);
     rate.reset(sampleRate, LEVEL_SMOOTHING_TIME);
   }
 
   void releaseResources()
   {
-
   }
 
   void processBlock(AudioBuffer<float>& buffer)
@@ -69,14 +66,12 @@ public:
       for (unsigned int smp = 0; smp <= buffer.getNumSamples(); smp++ )
       {
         float *val = buffer.getWritePointer(ch);
-        //ratio = static_cast<int> (rate);
-        std::cout << rate.getCurrentValue();
 
         //if (numSamples != buffer.getNumSamples())
         if (rate.getCurrentValue() > 1)
         {
           //if ( smp%(buffer.getNumSamples() - numSamples) != 0 ) 
-          if ( smp%static_cast<int>(rate.getCurrentValue()) != 0 )
+          if ( smp%(rate.getCurrentValue()) != 0 )
             val[smp] = val[smp - 1];
         }
       }
@@ -141,26 +136,27 @@ public:
     for (int ch = 0; ch < numChannels; ch++ )
     {
       const auto numSamples = buffer.getNumSamples();
-      
-      const float *oldVal = buffer.getReadPointer(ch);
-      float limit = oldVal[numSamples];
+      //const float *oldVal = buffer.getReadPointer(ch);
+      //float limit = oldVal[numSamples];
+      //float limit = buffer.getSample(ch, numSamples);
 
       for (unsigned int smp = 0; smp <= numSamples; smp++ )
       {
         float *val = buffer.getWritePointer(ch);
+
         if (rateArray[jmin(ch, numModChannels - 1)][smp] > 1)
         {
-          // Tentativo di gestione dei casi limite
-          if (smp == 0)
-            val[smp] = limit;
-          else if (smp%static_cast<int>(rateArray[jmin(ch, numModChannels - 1)][smp]) != 0)
+                                      // Tentativo di gestione dei casi limite
+          /*if (smp == 0)             
+            val[smp] = limit;         // Quando smp = 0 la condizione seguente è sempre falsa,
+          else */                     // -> il primo sample del buffer viene sempre campionato (???)
+          if (smp%static_cast<int>(rateArray[jmin(ch, numModChannels - 1)][smp]) != 0)
             (val[smp] = val[smp - 1]);
         }
+        //std::cout << '\n' ; std::cout << '\n' ; std::cout << '\n' ; std::cout << "rateArray" ; std::cout << "    " ;
         //std::cout << rateArray[jmin(ch, numModChannels - 1)][smp];
-        //std::cout << smp;
-        //std::cout << "      ";
-        //std::cout << limit;
-        //std::cout << '\n';
+        //std::cout << '\n' ; std::cout << '\n' ; std::cout << '\n' ; std::cout << "resto divisione" ; std::cout << "    " ;
+        //std::cout << smp%static_cast<int>(rateArray[jmin(ch, numModChannels - 1)][smp]);
       } 
     }
   }
