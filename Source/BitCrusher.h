@@ -128,14 +128,14 @@ public:
           // val[smp] = ( smp + offset ) % static_cast<int>(rateVal[ch]) == 0 ? val[smp] : oldSample[ch];
           if ( !! ( ( smp + offset ) % static_cast<int>(rateVal[ch]) ) ) val[smp] = oldSample[ch];
           
+          // Aggiorno l'offset
+          offset += ( (static_cast<int>(rateVal[ch]) - 1 ) ) -
+                    ( (numSamples - 1 ) % static_cast<int>(rateVal[ch]) );
+          offset = offset % static_cast<int>(rateVal[ch]);          
         }          
         // Aggiorno oldSample  
         oldSample[ch] = buffer.getSample(ch, smp);
       }
-      // Aggiorno l'offset
-      offset += ( (static_cast<int>(rateVal[ch]) - 1 ) ) -
-                ( (numSamples - 1 ) % static_cast<int>(rateVal[ch]) );
-      offset = offset % static_cast<int>(rateVal[ch]);
     }
   }
 
