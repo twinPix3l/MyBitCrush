@@ -16,15 +16,18 @@ MyBitCrushAudioProcessor::MyBitCrushAudioProcessor()
     parameters.addParameterListener(NAME_FQ, this);
     parameters.addParameterListener(NAME_AM, this);
     parameters.addParameterListener(NAME_WF, this);
+    parameters.addParameterListener(NAME_GP, this);
 
     drywetter.setDryWetRatio(DEFAULT_DW);
     quantizer.setBitDepth(DEFAULT_BD);
     //sampler.setRate(DEFAULT_RT);
-    modder.setMode(DEFAULT_MD);
+    //modder.setMode(DEFAULT_MD);
+    invert = DEFAULT_MD;
     LFO.setFrequency(DEFAULT_FQ);
     LFO.setWaveform(DEFAULT_WF);
     rateAdapter.setModAmount(DEFAULT_AM);
     rateAdapter.setParameter(DEFAULT_RT);
+    gainFader.setGain(DEFAULT_GP);
 }
 
 MyBitCrushAudioProcessor::~MyBitCrushAudioProcessor()
@@ -41,6 +44,7 @@ void MyBitCrushAudioProcessor::prepareToPlay(double sampleRate, int samplesPerBl
     LFO.prepareToPlay(sampleRate);
     modulationSignal.setSize(2, samplesPerBlock);
     rateAdapter.prepareToPlay(sampleRate);
+    gainFader.prepareToPlay(sampleRate, samplesPerBlock);
 }
 
 void MyBitCrushAudioProcessor::releaseResources()
@@ -66,20 +70,20 @@ void MyBitCrushAudioProcessor::processBlock(juce::AudioBuffer<float> &buffer, ju
 
     drywetter.setDry(buffer);
 
-    switch (modder.getMode())
+    if (invert == false)
     {
-    case 0:
         quantizer.processBlock(buffer);
         modSampler.processBlock(buffer, modulationSignal);
-        break;
-
-    case 1:
+    }
+    else
+    {
         modSampler.processBlock(buffer, modulationSignal);
         quantizer.processBlock(buffer);
-        break;
     }
 
     drywetter.merge(buffer);
+
+    gainFader.processBlock(buffer);
 
     // Listen to the waves
     //LFO.getNextAudioBlock(buffer, buffer.getNumSamples());
@@ -120,7 +124,8 @@ void MyBitCrushAudioProcessor::parameterChanged(const String &paramID, float new
         rateAdapter.setParameter(newValue);
 
     if (paramID == NAME_MD)
-        modder.setMode(newValue);
+        //modder.setMode(newValue);
+        invert = newValue;
 
     if (paramID == NAME_FQ)
         LFO.setFrequency(newValue);
@@ -130,6 +135,9 @@ void MyBitCrushAudioProcessor::parameterChanged(const String &paramID, float new
     
     if (paramID == NAME_WF)
         LFO.setWaveform(newValue);
+
+    if (paramID == NAME_GP)
+        gainFader.setGain(newValue);
 }
 
 //==============================================================================

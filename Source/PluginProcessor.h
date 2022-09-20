@@ -4,6 +4,7 @@
 #include "DryWet.h"
 #include "BitCrusher.h"
 #include "LFO.h"
+#include "Gain.h"
 
 class MyBitCrushAudioProcessor  : public juce::AudioProcessor, public AudioProcessorValueTreeState::Listener
 {
@@ -54,13 +55,16 @@ private:
     //Sampler sampler;
     ModSampler modSampler;
 
-    Modder modder;
+    //Modder modder;
+    bool invert;
 
     NaiveOscillator LFO;
 
     RateModulation rateAdapter;
 
     AudioBuffer<float> modulationSignal;
+
+    GainFader gainFader;
 
     //==============================================================================
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (MyBitCrushAudioProcessor)

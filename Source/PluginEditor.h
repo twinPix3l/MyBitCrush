@@ -30,6 +30,7 @@ private:
     std::unique_ptr<SliderAttachment> fqAttachment;
     std::unique_ptr<SliderAttachment> amAttachment;
     std::unique_ptr<SliderAttachment> wfAttachment;
+    std::unique_ptr<SliderAttachment> gpAttachment;
 
     std::unique_ptr<juce::Slider> dwSlider;
     std::unique_ptr<juce::Slider> bdSlider;
@@ -38,6 +39,7 @@ private:
     std::unique_ptr<juce::Slider> fqSlider;
     std::unique_ptr<juce::Slider> amSlider;
     std::unique_ptr<juce::Slider> wfSlider;
+    std::unique_ptr<juce::Slider> gpSlider;
 
     std::unique_ptr<juce::Label> dwLabel;
     std::unique_ptr<juce::Label> bdLabel;
@@ -46,6 +48,7 @@ private:
     std::unique_ptr<juce::Label> fqLabel;
     std::unique_ptr<juce::Label> amLabel;
     std::unique_ptr<juce::Label> wfLabel;
+    std::unique_ptr<juce::Label> gpLabel;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (MyBitCrushAudioProcessorEditor) //MACRO DI JUCE = "VolumeFaderAudioProcessorEditor" deve essere dichiarata non copyable
                                                                                    //                 e gli viene collegato un memory leak detector

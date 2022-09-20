@@ -22,12 +22,12 @@ public:
     {
       float *val = buffer.getWritePointer(ch);
       
-      for (int smp = 0; smp <= buffer.getNumSamples(); smp++ )
+      for (int smp = 0; smp < buffer.getNumSamples(); smp++ )
       {
         int qLevels = powf(2, bitDepth - 1);
-
-        ( val[smp] >= 0) ? (val[smp] = ceil(val[smp] * qLevels) / qLevels)
-                         : (val[smp] = floor(val[smp] * qLevels) / qLevels);
+        
+        val[smp] = (val[smp] >= 0) ? (val[smp] = ceil(val[smp] * qLevels) / qLevels)
+                                   : (val[smp] = floor(val[smp] * qLevels) / qLevels);
       }
     }
   };
@@ -90,7 +90,7 @@ private:
   JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(Sampler);
 };
 
-class Modder
+/*class Modder
 {
 public:
   Modder() {}
@@ -111,7 +111,7 @@ private:
   bool mode;
 
   JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(Modder);
-};
+};*/
 
 class ModSampler
 {
@@ -130,38 +130,38 @@ public:
   void processBlock(AudioBuffer<float>& buffer, AudioBuffer<float>& rateBuffer)
   {
     const auto numChannels = buffer.getNumChannels();
-    const auto numModChannels = rateBuffer.getNumChannels();
-    auto rateArray = rateBuffer.getArrayOfReadPointers();
+    const auto numSamples = buffer.getNumSamples();
 
     for (int ch = 0; ch < numChannels; ch++ )
     {
-      const auto numSamples = buffer.getNumSamples();
-      //const float *oldVal = buffer.getReadPointer(ch);
-      //float limit = oldVal[numSamples];
-      //float limit = buffer.getSample(ch, numSamples);
+      const float *rateVal = rateBuffer.getReadPointer(ch);
 
-      for (unsigned int smp = 0; smp <= numSamples; smp++ )
+      for (unsigned int smp = 0; smp < numSamples; smp++ )
       {
+        //int rateVal = static_cast<int>(rateBuffer.getSample(ch, smp));
         float *val = buffer.getWritePointer(ch);
-
-        if (rateArray[jmin(ch, numModChannels - 1)][smp] > 1)
+        if (rateVal[ch] > 1)
         {
-                                      // Tentativo di gestione dei casi limite
-          /*if (smp == 0)             
-            val[smp] = limit;         // Quando smp = 0 la condizione seguente è sempre falsa,
-          else */                     // -> il primo sample del buffer viene sempre campionato (???)
-          if (smp%static_cast<int>(rateArray[jmin(ch, numModChannels - 1)][smp]) != 0)
-            (val[smp] = val[smp - 1]);
+          // Tentativo di gestione dei casi limite
+          if ((smp%static_cast<int>(rateVal[ch]))/* - offset*/ != 0)
+            val[smp] = ((smp - offset) << 0) ? oldSample[ch] : val[smp - 1];
+
+          // Aggiorno oldSample  
+          oldSample[ch] = buffer.getSample(ch, smp);
         }
-        //std::cout << '\n' ; std::cout << '\n' ; std::cout << '\n' ; std::cout << "rateArray" ; std::cout << "    " ;
-        //std::cout << rateArray[jmin(ch, numModChannels - 1)][smp];
-        //std::cout << '\n' ; std::cout << '\n' ; std::cout << '\n' ; std::cout << "resto divisione" ; std::cout << "    " ;
-        //std::cout << smp%static_cast<int>(rateArray[jmin(ch, numModChannels - 1)][smp]);
-      } 
+      }
+      // Aggiorno l'offset
+      offset += ((static_cast<int>(rateVal[ch]) - 1))
+               - (numSamples%static_cast<int>(rateVal[ch]));
+
+      
     }
   }
 
 private:
+
+  int offset = 0;
+  float oldSample[2] = {0.0f, 0.0f};
 
   JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(ModSampler);
 };

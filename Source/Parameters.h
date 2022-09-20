@@ -12,7 +12,7 @@
 #define MAX_RT 70
 
 #define NAME_MD "md"
-#define DEFAULT_MD 0
+#define DEFAULT_MD false
 
 #define NAME_FQ "fq"
 #define DEFAULT_FQ 0.1f
@@ -22,6 +22,9 @@
 
 #define NAME_WF "waveform"
 #define DEFAULT_WF 0
+
+#define NAME_GP "Gain"
+#define DEFAULT_GP 1.0f
 
 using namespace juce;
 
@@ -38,6 +41,7 @@ namespace Parameters
     params.push_back(std::make_unique<AudioParameterFloat>(NAME_FQ, "LFO freq (Hz)", NormalisableRange<float>(0.1f, 20.0f, 0.01f, 0.5f), DEFAULT_FQ));
     params.push_back(std::make_unique<AudioParameterFloat>(NAME_AM, "Mod amount", 0.0f, MAX_RT / 2.0f, DEFAULT_AM));
     params.push_back(std::make_unique<AudioParameterChoice>(NAME_WF, "LFO shape", StringArray{"Sine", "Triangle", "Saw Up", "Saw Down", "Square"}, DEFAULT_WF));
+    params.push_back(std::make_unique<AudioParameterFloat>(NAME_GP, "Volume", 0.0f, 1.0f, DEFAULT_GP));
     
     return {params.begin(), params.end()};
   }

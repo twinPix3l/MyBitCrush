@@ -4,7 +4,7 @@
 #include <JuceHeader.h>
 #include "Parameters.h"
 
-#define GLIDE_TIME 0.005f
+#define GLIDE_TIME 0.01f
 #define SMOOTHING_TIME 0.02f
 
 using namespace juce;
@@ -58,9 +58,7 @@ public:
 
       // Triangle wave
       case 1: 
-        //sampleValue = 4.0f * abs(currentPhase - 0.5f) - 1.0f; // Difficoltà nell'utilizzo di std::abs
-        (currentPhase - 0.5f) > 0 ? (sampleValue = 4.0f * (currentPhase - 0.5f) - 1.0f)
-                                  : (sampleValue = 4.0f * -(currentPhase - 0.5f) - 1.0f);
+        sampleValue = 4.0f * (std::fabs(currentPhase - 0.5f)) - 1.0f;
         break;
 
       // Saw Up wave
@@ -132,7 +130,7 @@ void processBlock(AudioBuffer<float>& buffer, const int numSamples)
   {
     FloatVectorOperations::add(bufferData[ch], 1.0f, numSamples);
     FloatVectorOperations::multiply(bufferData[ch], 0.5f, numSamples);
-    std::cout << bufferData[ch];
+    //std::cout << bufferData[ch];
   }
   
 
