@@ -171,9 +171,9 @@ void MyBitCrushAudioProcessorEditor::paint (juce::Graphics& g)
 
       {
         int x = 0, y = 0, width = 768, height = 304;
-        juce::Colour fillColour1 = Colours::transparentBlack, fillColour2 = juce::Colour (0xff250885/*0xffEBBF4E*/);
+        juce::Colour fillColour1 = Colours::transparentBlack, fillColour2 = juce::Colour (0xff250885);
         g.setGradientFill (juce::ColourGradient (fillColour1, 300.0f - 0.0f + x, 200.0f - 0.0f + y,
-                                                 fillColour2, 0.0f - 0.0f + x, 40.0f - 0.0f + y,
+                                                 fillColour2, 80.0f - 0.0f + x, 40.0f - 0.0f + y,
                                                  false));
         g.fillRect (x, y, width, height);
     }

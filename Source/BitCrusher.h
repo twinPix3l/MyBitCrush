@@ -108,7 +108,7 @@ public:
   {
     const auto numChannels = buffer.getNumChannels();
     const auto numSamples = buffer.getNumSamples();
-    int offset = 0;
+    //const float *rateVal = rateBuffer.getReadPointer(0);
 
     for (int ch = 0; ch < numChannels; ch++ )
     {
@@ -120,22 +120,28 @@ public:
         float *val = buffer.getWritePointer(ch);
         if (rateVal[ch] > 1)
         {
-          // Tentativo di gestione dei casi limite
-          if ((smp%static_cast<int>(rateVal[ch])) /*- offset*/ != 0)
-            val[smp] = ((smp - offset) < 0) ? oldSample[ch] : val[smp - 1];
-
-          // Aggiorno oldSample  
-          oldSample[ch] = buffer.getSample(ch, smp);
-        }
+          // Tentativo 1 di gestione dei casi limite
+          //if ((smp % static_cast<int>(rateVal[ch])) /*- offset*/ != 0)
+          //  val[smp] = ((smp - offset) < 0) ? oldSample[ch] : val[smp - 1];
+          
+          // Tentativo 2 di gestione dei casi limite
+          // val[smp] = ( smp + offset ) % static_cast<int>(rateVal[ch]) == 0 ? val[smp] : oldSample[ch];
+          if ( !! ( ( smp + offset ) % static_cast<int>(rateVal[ch]) ) ) val[smp] = oldSample[ch];
+          
+        }          
+        // Aggiorno oldSample  
+        oldSample[ch] = buffer.getSample(ch, smp);
       }
       // Aggiorno l'offset
-      offset = ((static_cast<int>(rateVal[ch]) - 1))
-               - (numSamples%static_cast<int>(rateVal[ch]));
+      offset += ( (static_cast<int>(rateVal[ch]) - 1 ) ) -
+                ( (numSamples - 1 ) % static_cast<int>(rateVal[ch]) );
+      offset = offset % static_cast<int>(rateVal[ch]);
     }
   }
 
 private:
 
+  int offset = 0;
   float oldSample[2] = {0.0f, 0.0f};
 
   JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(ModSampler);
