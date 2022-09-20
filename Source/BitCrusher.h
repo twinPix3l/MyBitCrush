@@ -90,29 +90,6 @@ private:
   JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(Sampler);
 };
 
-/*class Modder
-{
-public:
-  Modder() {}
-  ~Modder() {}
-
-  void setMode (bool newValue)
-  {
-    mode = newValue;
-  }
-
-  bool getMode()
-  {
-    return mode;
-  }
-
-private:
-
-  bool mode;
-
-  JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(Modder);
-};*/
-
 class ModSampler
 {
 public:
@@ -131,6 +108,7 @@ public:
   {
     const auto numChannels = buffer.getNumChannels();
     const auto numSamples = buffer.getNumSamples();
+    int offset = 0;
 
     for (int ch = 0; ch < numChannels; ch++ )
     {
@@ -143,24 +121,21 @@ public:
         if (rateVal[ch] > 1)
         {
           // Tentativo di gestione dei casi limite
-          if ((smp%static_cast<int>(rateVal[ch]))/* - offset*/ != 0)
-            val[smp] = ((smp - offset) << 0) ? oldSample[ch] : val[smp - 1];
+          if ((smp%static_cast<int>(rateVal[ch])) /*- offset*/ != 0)
+            val[smp] = ((smp - offset) < 0) ? oldSample[ch] : val[smp - 1];
 
           // Aggiorno oldSample  
           oldSample[ch] = buffer.getSample(ch, smp);
         }
       }
       // Aggiorno l'offset
-      offset += ((static_cast<int>(rateVal[ch]) - 1))
+      offset = ((static_cast<int>(rateVal[ch]) - 1))
                - (numSamples%static_cast<int>(rateVal[ch]));
-
-      
     }
   }
 
 private:
 
-  int offset = 0;
   float oldSample[2] = {0.0f, 0.0f};
 
   JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(ModSampler);
