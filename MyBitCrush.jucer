@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <JUCERPROJECT id="kyi8Ng" name="MyBitCrush" projectType="audioplug" jucerFormatVersion="1"
-              pluginFormats="buildStandalone,buildVST3" pluginChannelConfigs="{1,1},{2,2},{1,2},{2,1}">
+              pluginFormats="buildStandalone,buildVST3" pluginChannelConfigs="{1,1},{2,2}">
   <MAINGROUP id="BAYZ3I" name="MyBitCrush">
     <GROUP id="{3DE5787C-BDAF-1399-94A7-C5081ADC129E}" name="Source">
       <GROUP id="{4565BEC2-81F9-682F-0A3C-690C42306AE9}" name="GUI">
