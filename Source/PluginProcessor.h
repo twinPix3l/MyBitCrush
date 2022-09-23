@@ -24,7 +24,7 @@ public:
 	bool hasEditor() const override               {return true; }
 
 	//==============================================================================
-	const juce::String getName() const override   {return JucePlugin_Name; }
+	const juce::String getName() const override   {return "MyBitCrush"; }
 
 	bool acceptsMidi() const override             {return false; }
 	bool producesMidi() const override            {return false; }

@@ -29,7 +29,7 @@ public:
 					qLevels = powf(2, bitDepth - 1) / 2;
 		
 		  			val[smp] = (val[smp] >= 0) ? ceil(val[smp] * qLevels) / qLevels
-											   : floor(val[smp] * qLevels) / qLevels;
+								   : floor(val[smp] * qLevels) / qLevels;
 		  			//val[smp] = ( floor(val[smp] * qLevels ) ) / qLevels;
 
 		  			if (val[smp] > 1) val[smp] = 1;
@@ -74,15 +74,14 @@ public:
   	{
   	}
 
-  	void processBlock(AudioBuffer<float>& buffer)
+  	void processBlock(AudioBuffer<float>& buffer, AudioBuffer<float>& rateBuffer)
   	{
 		for (int ch = buffer.getNumChannels(); --ch >= 0; ) 
 		{
-	  		for (unsigned int smp = 0; smp <= buffer.getNumSamples(); smp++ )
+	  		for (unsigned int smp = 0; smp < buffer.getNumSamples(); smp++ )
 	  		{
 				float *val = buffer.getWritePointer(ch);
 
-				//if (numSamples != buffer.getNumSamples())
 				if (rate.getCurrentValue() > 1)
 				{
 		  			//if ( smp%(buffer.getNumSamples() - numSamples) != 0 ) 
@@ -137,22 +136,22 @@ public:
 		  			//  val[smp] = ((smp - offset) < 0) ? oldSample[ch] : val[smp - 1];
 		  
 		  			// Tentativo 2 di gestione dei casi limite (le espressioni sono equivalenti)
-		  			// val[smp] = ( smp + offset ) % static_cast<int>(rateVal[ch]) == 0 ? val[smp] : oldSample[ch];
+		  			//val[smp] = ( smp + offset ) % static_cast<int>(rateVal[ch]) == 0 ? val[smp] : oldSample[ch];
 		  			if ( ! ( ( smp + offset ) % static_cast<int>(rateVal[0]) ) ) val[smp] = oldSample[ch];
-				}    
+				}
 				// Aggiorno oldSample  
-				oldSample[ch] = buffer.getSample(ch, numSamples - 1);
+				oldSample[ch] = buffer.getSample(ch, numSamples - 1);    
 	  		}
-			//std::cout << offset; std::cout << "          "; std::cout << ch; std::cout << '\n';
+			
 		}
 		// Aggiorno l'offset
 		if (rateVal[0] > 1)
 		{
 	  		//offset += ( (static_cast<int>(rateVal[ch]) - 1 ) ) -
-	  		//          ( (numSamples - 1 ) % static_cast<int>(rateVal[ch]) );
-	  		//offset = offset % static_cast<int>(rateVal[ch]);
-	  		offset = ( numSamples + offset ) % static_cast<int>(rateVal[0]);
-		}
+			//          ( (numSamples - 1 ) % static_cast<int>(rateVal[ch]) );
+  			//offset = offset % static_cast<int>(rateVal[ch]);
+  			offset = ( numSamples + offset ) % static_cast<int>(rateVal[0]);
+		}		
   	}
 
 private:

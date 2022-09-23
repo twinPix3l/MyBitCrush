@@ -153,7 +153,7 @@ public:
 			{  
 				FloatVectorOperations::add(bufferData[ch], parameter.getCurrentValue(), numSamples);
 			}
-			// Controllo di esssere dentro al rate massimo  
+			// Controllo di essere dentro al rate massimo  
 			for (int ch = 0; ch < numCh; ch++)
 				FloatVectorOperations::min(bufferData[ch], bufferData[ch], MAX_RT, numSamples);
 	}
