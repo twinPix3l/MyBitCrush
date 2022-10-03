@@ -39,6 +39,6 @@ private:
 	float gainParameter;
 	SmoothedValue<float, ValueSmoothingTypes::Linear> smoothedGain; 
 
-	JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(GainFader);
+	JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(GainFader)
 };
 

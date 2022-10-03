@@ -26,7 +26,7 @@ public:
 	  		{
 				if (bitDepth > 1)
 				{          
-					qLevels = powf(2, bitDepth - 1) / 2;
+					qLevels = powf(2, static_cast<int>(bitDepth - 1)) / 2;
 		
 		  			val[smp] = (val[smp] >= 0) ? ceil(val[smp] * qLevels) / qLevels
 								   : floor(val[smp] * qLevels) / qLevels;
@@ -45,18 +45,18 @@ public:
 		}
   	}
 
-  	void setBitDepth(int newValue)
+  	void setBitDepth(float newValue)
   	{
 		bitDepth = newValue;
   	}
 
 private:
 
-  	int bitDepth = 0;
+  	float bitDepth = 0.0f;
   	int qLevels = 1;
 	float hold[2] = {0.0f, 0.0f};
 
-  	JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(Quantizer);
+  	JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(Quantizer)
 };
 
 class Sampler
@@ -101,7 +101,7 @@ private:
   
 	SmoothedValue<int, ValueSmoothingTypes::Linear> rate;
 
-  	JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(Sampler);
+  	JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(Sampler)
 };
 
 class ModSampler
@@ -126,10 +126,11 @@ public:
 
 		for (int ch = 0; ch < numChannels; ch++ )
 		{
-	  		for (unsigned int smp = 0; smp < numSamples; smp++ )
+			float *val = buffer.getWritePointer(ch);
+
+	  		for (int smp = 0; smp < numSamples; smp++ )
 	  		{
-				float *val = buffer.getWritePointer(ch);
-				if (rateVal[0] > 1)
+				if (rateVal[smp] > 1)
 				{
 		  			// Tentativo 1 di gestione dei casi limite
 		  			//if ( ( ( smp % static_cast<int>(rateVal[0]) ) - offset ) != 0)
@@ -137,27 +138,40 @@ public:
 		  
 		  			// Tentativo 2 di gestione dei casi limite (le espressioni sono equivalenti)
 		  			//val[smp] = ( smp + offset ) % static_cast<int>(rateVal[ch]) == 0 ? val[smp] : oldSample[ch];
-		  			if ( ! ( ( smp + offset ) % static_cast<int>(rateVal[0]) ) ) val[smp] = oldSample[ch];
+		  			//if ( ! ( ( smp + offset ) % static_cast<int>(rateVal[smp]) ) ) val[smp] = oldSample[ch];
+
+					// Soluzione senza controllo sui limiti del buffer
+					int rt = static_cast<int>(rateVal[smp]);
+
+					count++;
+					count = count % rt;
+
+					if (count != 0)
+						val[smp] = sampled;
+					else
+						sampled = val[smp];
 				}
 				// Aggiorno oldSample  
-				oldSample[ch] = buffer.getSample(ch, numSamples - 1);    
+				//oldSample[ch] = buffer.getSample(ch, numSamples - 1);    
 	  		}
 			
 		}
 		// Aggiorno l'offset
-		if (rateVal[0] > 1)
+		//if (rateVal[0] > 1)
 		{
 	  		//offset += ( (static_cast<int>(rateVal[ch]) - 1 ) ) -
 			//          ( (numSamples - 1 ) % static_cast<int>(rateVal[ch]) );
   			//offset = offset % static_cast<int>(rateVal[ch]);
-  			offset = ( numSamples + offset ) % static_cast<int>(rateVal[0]);
+  			//offset = ( numSamples + offset ) % static_cast<int>(rateVal[0]);
 		}		
   	}
 
 private:
 
-  	int offset = 0;
-  	float oldSample[2] = {0.0f, 0.0f};
+  	//unsigned int offset = 0;
+  	//float oldSample[2] = {0.0f, 0.0f};
+	unsigned int count = 0;
+	float sampled = 0.0f;
 
-  	JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(ModSampler);
+  	JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(ModSampler)
 };
