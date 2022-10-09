@@ -3,6 +3,7 @@
 
 #include <JuceHeader.h>
 #include "PluginProcessor.h"
+//#include "BinaryData.h"
 
 using namespace juce;
 
@@ -50,8 +51,8 @@ private:
     std::unique_ptr<juce::Label> wfLabel;
     std::unique_ptr<juce::Label> gpLabel;
 
-    juce::Image btj = ImageFileFormat::loadFrom (File("/home/yost/Documents/juce_projects/MyBitCrush/beetlejuice1.jpeg"));
+    //juce::Image btj = ImageFileFormat::loadFrom (File("/home/yost/Documents/juce_projects/MyBitCrush/beetlejuice1.jpeg"));
+    juce::Image btj = ImageFileFormat::loadFrom (BinaryData::beetlejuice1_jpeg, BinaryData::beetlejuice1_jpegSize);
 
-    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (MyBitCrushAudioProcessorEditor) //MACRO DI JUCE = "VolumeFaderAudioProcessorEditor" deve essere dichiarata non copyable
-                                                                                   //                 e gli viene collegato un memory leak detector
+    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (MyBitCrushAudioProcessorEditor)
 };

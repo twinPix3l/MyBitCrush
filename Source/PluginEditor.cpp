@@ -15,8 +15,8 @@ MyBitCrushAudioProcessorEditor::MyBitCrushAudioProcessorEditor (MyBitCrushAudioP
   	dwSlider->setRange (0, 0.5, 0);
   	dwSlider->setValue(DEFAULT_DW);
 	dwSlider->setSliderStyle (Slider::LinearHorizontal);
-  	dwSlider->Slider::setColour(Slider::trackColourId, Colours::darkred);
-  	dwSlider->Slider::setColour(Slider::backgroundColourId, Colours::darkseagreen);
+  	dwSlider->Slider::setColour(Slider::trackColourId, Colour(0xffA814AD));
+  	dwSlider->Slider::setColour(Slider::backgroundColourId, Colours::silver);
   
   	dwSlider->setTextBoxStyle (juce::Slider::TextBoxRight, false, 80, 20);
 
@@ -27,6 +27,7 @@ MyBitCrushAudioProcessorEditor::MyBitCrushAudioProcessorEditor (MyBitCrushAudioP
   	bdSlider->setRange (1, 32, 1);
   	bdSlider->setValue(DEFAULT_BD);
   	bdSlider->setSliderStyle (Slider::LinearHorizontal);
+	bdSlider->Slider::setColour(Slider::trackColourId, Colour(0xff263238));
   	bdSlider->Slider::setColour(Slider::backgroundColourId, Colours::yellow);
   	bdSlider->setTextBoxStyle (Slider::TextBoxRight, false, 80, 20);
 
@@ -46,7 +47,7 @@ MyBitCrushAudioProcessorEditor::MyBitCrushAudioProcessorEditor (MyBitCrushAudioP
   	mdButton->setColour(0x1000281, Colours::black);
 	addAndMakeVisible (mdButton.get());
 
-  	mdButton->setBounds (545, 146, 72, 24);
+  	mdButton->setBounds (543, 146, 72, 24);
 
   	fqSlider.reset (new juce::Slider ("LFO freq (Hz)"));
   	addAndMakeVisible (fqSlider.get());
@@ -73,7 +74,9 @@ MyBitCrushAudioProcessorEditor::MyBitCrushAudioProcessorEditor (MyBitCrushAudioP
   	wfSlider->setRange (0, 4, 1);
   	wfSlider->setValue(DEFAULT_WF);
   	wfSlider->setSliderStyle (Slider::LinearHorizontal);
-  	wfSlider->setTextBoxStyle (Slider::TextBoxRight, false, 80, 20);
+	wfSlider->Slider::setColour(Slider::trackColourId, Colour(0xff263238));
+  	wfSlider->Slider::setColour(Slider::backgroundColourId, Colour(0xff263238));
+	wfSlider->setTextBoxStyle (Slider::TextBoxRight, false, 80, 20);
 
   	wfSlider->setBounds (150, 246, 500, 16);
 
@@ -82,7 +85,7 @@ MyBitCrushAudioProcessorEditor::MyBitCrushAudioProcessorEditor (MyBitCrushAudioP
   	gpSlider->setRange (0.0f, 1.0f, 0);
   	gpSlider->setValue(DEFAULT_GP);
   	gpSlider->setSliderStyle (Slider::LinearVertical);
-  	gpSlider->Slider::setColour(Slider::trackColourId, Colours::green);
+  	gpSlider->Slider::setColour(Slider::trackColourId, Colour(0xffA814AD));
   	gpSlider->setTextBoxStyle (Slider::TextBoxBelow, false, 80, 20);
 
   	gpSlider->setBounds (685, 50, 48, 240);
@@ -175,11 +178,9 @@ MyBitCrushAudioProcessorEditor::~MyBitCrushAudioProcessorEditor()
 //==============================================================================
 void MyBitCrushAudioProcessorEditor::paint (juce::Graphics& g)
 {
-  	//g.fillAll(juce::Colours::transparentBlack); //fillAll = metodo del graphic context
-
     	{
         	int x = 0, y = 0, width = 768, height = 304;
-        	juce::Colour fillColour1 = Colours::black, fillColour2 = Colours::silver/*juce::Colour (0xff250885)*/;
+        	juce::Colour fillColour1 = Colours::black, fillColour2 = Colours::silver;
 		g.setGradientFill (juce::ColourGradient (fillColour1, 340.0f - 0.0f + x, 240.0f - 0.0f + y,
                                                  	 fillColour2, 40.0f - 0.0f + x, 0.0f - 0.0f + y,
                                                  	 false));
@@ -190,7 +191,7 @@ void MyBitCrushAudioProcessorEditor::paint (juce::Graphics& g)
 		g.setFont (40.0f);
 		g.setColour (juce::Colours::silver);
 		g.drawText ("__________________", getLocalBounds(), juce::Justification::topLeft, true);
-		g.setColour (juce::Colours::blueviolet);
+		g.setColour (Colour(0xffA814AD));
 		g.drawText ("Bitle", getLocalBounds(), juce::Justification::centredTop, true);
 		g.setColour (juce::Colours::silver);
 		g.drawText ("________Juce", getLocalBounds(), juce::Justification::centredTop, true);
@@ -200,8 +201,6 @@ void MyBitCrushAudioProcessorEditor::paint (juce::Graphics& g)
 		g.setColour(Colours::black);
 		g.setOpacity(0.25);
 		g.drawImageAt(btj, 0, 0, false);
-		
-		//g.setTiledImageFill(btj, 0, 0, 0.9);
 	}
 }
 

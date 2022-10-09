@@ -1,9 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<JUCERPROJECT id="kyi8Ng" name="MyBitCrush" projectType="audioplug" jucerFormatVersion="1"
+<JUCERPROJECT id="kyi8Ng" name="BitleJuce" projectType="audioplug" jucerFormatVersion="1"
               pluginFormats="buildStandalone,buildVST3" pluginChannelConfigs="{1,1},{2,2}"
               pluginManufacturer="yost">
-  <MAINGROUP id="BAYZ3I" name="MyBitCrush">
+  <MAINGROUP id="BAYZ3I" name="BitleJuce">
+    <GROUP id="{0B23CAF6-EF73-3E87-2CA7-E715B6AF5EDA}" name="Resources">
+      <FILE id="EZwMvL" name="beetlejuice1.jpeg" compile="0" resource="1"
+            file="beetlejuice1.jpeg"/>
+    </GROUP>
     <GROUP id="{3DE5787C-BDAF-1399-94A7-C5081ADC129E}" name="Source">
       <GROUP id="{4565BEC2-81F9-682F-0A3C-690C42306AE9}" name="GUI">
         <FILE id="Qpwzlo" name="PluginEditor.h" compile="0" resource="0" file="Source/PluginEditor.h"/>
